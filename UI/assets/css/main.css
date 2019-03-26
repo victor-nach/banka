@@ -1,0 +1,489 @@
+/*
+================================================
+/* Table of Content
+================================================
+1. General styles
+2. Landing Page
+    2.1 General styles
+    2.3 Login / Signup
+    2.3 
+    2.4 Introductory section
+    2.5 Candidates
+    2.6 offices
+    2.7 parties
+    2.8 Footer styles
+3. Dashboard Area General Styles
+4. Dashboard Profile page
+5. Dashboard Candidates page
+6. Dashboard manage candidates page
+dashboard
+n. Front Footer styles
+
+/*
+================================================
+1. General Styles
+================================================
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Poppins');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, html {
+    height: 100%;
+    width: 100%;
+}
+html {
+    line-height: 1.15;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+body {
+    font-family: "Poppins", sans-serif;
+    background: #fff;
+    color: #eee;
+    font-size: 14px;
+    overflow-x: hidden;
+    position: relative;
+}
+article,
+aside,
+footer,
+header,
+nav,
+section {
+    display: block;
+}
+a {
+    background-color: transparent;
+    -webkit-text-decoration-skip: objects;
+}
+img {
+    border-style: none;
+}
+button,
+input,
+optgroup,
+select,
+textarea {
+    font-size: 100%;
+    line-height: 1.15;
+    margin: 0;
+}
+button,
+html [type="button"],
+[type="reset"],
+[type="submit"] {
+    -webkit-appearance: button;
+}
+textarea {
+    overflow: auto;
+}
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    text-transform: none;
+}
+h1{
+    font-size:40px;
+}
+h2{
+    font-size:35px;
+}
+h3{
+    font-size:24px;
+}
+h4 {
+    font-size: 20px;
+}
+h5 {
+    font-size: 18px;
+}
+h6{
+    font-size:16px;
+}
+p{
+    font-size:15px;
+}
+ul,li{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+a, a:hover, a:active, a:focus {
+    outline: none;
+    border: none;
+    text-decoration:none;
+}
+a {
+    color:#333;
+    transition: all 0.3s ease 0s;
+}
+a:focus, a:hover {
+    color:#003471;
+    -webkit-transition: all .3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+/*
+================================================
+2. Landing Page
+================================================
+*/
+/*---- 2.1 General styles ----*/
+.page-wrap {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+    background: linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)), url('../img/6.jpg');
+    background-size: cover;
+    -webkit-filter: blur(0);
+    filter: blur(0);
+    color: #eee;
+    transition: filter 1s .5s, -webkit-filter 1s .5s;
+}
+.page-wrap.blur {
+    -webkit-filter: blur(2px) ;
+    filter: blur(2px);
+}
+header {
+    text-shadow: #001935 1px 1px 5px;
+    padding: 20px 0 0 0;
+}
+header span {
+    padding: 5px;
+    border-bottom: 1px solid #003471;
+}
+main {
+    text-align: center;
+    width: 80%;
+} 
+main h2 {
+    margin: 0 0 20px 0;
+}
+main p:nth-child(2) {
+    margin: 0 0 20px 0;
+}
+main p:nth-child(3) {
+    margin: 20px 0 10px 0;
+}
+main button {
+    margin: 0 10px 0;
+}
+footer {
+    padding: 10px;
+    border-top: 1px solid #003471;
+    text-align: center;
+    width: 100%;
+}
+/*---- 2.2 modal ----*/
+.modal {
+    background: rgba(0,0,0,.3);
+    /* box-shadow: #000 1px 1px 5px 8px; */
+    /* border: 3px solid #000; */
+    transform: scaleX(0.1) scaleY(0);
+}
+.modal.show {
+    animation: show-modal 1s ease both ;
+}
+.modal.hide {
+    animation: hide-modal 1s ease both .5s;
+}
+@keyframes show-modal {
+    0% {
+        transform: scaleX(0.003) scaleY(0.003);
+    }
+    50% { 
+        transform: scaleX(1) scaleY(0.003);
+     }
+    100% {
+        transform: scaleX(1) scaleY(1);
+    }
+}
+@keyframes hide-modal {
+    0% {
+        transform: scaleX(1) scaleY(1);
+        
+    }
+    50% { 
+        transform: scaleX(1) scaleY(0.003);
+     }
+    100% {
+        transform: scaleX(0.003) scaleY(0);
+    }
+}
+
+/*---- 2.31 Login / Signup animations ----*/
+.form-outer-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+    z-index: 85;
+}
+.form-inner-container {
+  position: relative;
+  left: 10px;
+  width: 80%;
+  height: 80%;
+  overflow: hidden;
+  text-align: center;
+  background: rgba(0,0,0,.5);
+  border: 1px solid #003471;
+  box-shadow: #003471 1px 1px 2px;
+  transition: transform .5s 1s;
+}
+@media (max-width: 600px) {
+    .form-inner-container {
+        width: 100%;
+      }
+}
+.show .form-inner-container {
+    transform: scale(1,1);
+}
+/* .hide .form-inner-container {
+    animation: hide-inner-modal .5s both;
+}
+@keyframes hide-inner-modal {
+    0%{ transform: scale(1,1); }
+    100%{ transform: scale(0,0); }
+} */
+.signup-main, .login-main {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 65%;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 1s ease; 
+}
+.login-main {
+    transform: translateX(0%);
+    z-index: 89;
+    opacity: 0;
+    transition: all 1s ease;
+}
+.left .login-main {
+    transform: translateX(-53.846%);
+    animation: push-forward 1s both;
+}
+.right .login-main {
+    animation: push-back 1s both;
+}
+.signup-main {
+    transform: translateX(0%);
+    z-index: 90;
+    transition: all 1s ease;
+}
+.left .signup-main {
+    transform: translateX(0%);
+    z-index: 90;
+    transition: all 1s ease;
+    animation: push-back 1s both;
+}
+.right .signup-main {
+    animation: push-forward 1s both;
+}
+.left .signup-main {
+    transform: translateX(-53.846%);
+}
+@keyframes push-forward {
+    0%,40% {z-index: 89; opacity: 0;}
+    41%,100% {z-index: 91; opacity: 1;}
+}
+@keyframes push-back {
+    0%,40% {z-index: 91; opacity: 1;}
+    41%,100% {z-index: 89; opacity: 0;}
+}
+.signup-sub, .login-sub {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 35%;
+    background: transparent;
+    display: flex;    
+    align-items: center;
+    justify-content: center;
+}
+.signup-sub {
+    right: 0;
+    z-index: 92;
+    overflow: hidden;
+    transform: translateX(100%);
+    transition: all 1s ease .3s;
+    opacity: 0;
+}
+.left .signup-sub {
+    transform: translateX(0%);
+    opacity: 1;
+}
+.login-sub {
+    left: 0;
+    z-index: 92;
+    overflow: hidden;
+    transform: translateX(0%);
+    transition: all 1s ease .3s;
+    opacity: 1;
+}
+.left .login-sub {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+.middle-block {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 35%;
+    background: #003471;
+    z-index: 91;
+    transform-origin: left;
+}
+.left .middle-block {
+    animation: move-right 1s linear both;
+}
+.right .middle-block {
+    animation: move-left 1s linear both;
+    transform-origin: right;
+}
+@keyframes move-right {
+    0% {
+        transform: translateX(0%) scaleX(1);
+    }
+    30% {
+        transform: translateX(56%) scaleX(1.5);
+    }
+    50% {
+        transform: translateX(93%) scaleX(1.5);
+    }
+    99% {
+        transform: translateX(186%) scaleX(1.5);
+    }
+    100% {
+        transform: translateX(185.714%) scaleX(1);
+    }
+}
+@keyframes move-left {
+    0% {
+        transform: translateX(185.714%) scaleX(1);
+    }
+    30% {
+        transform: translateX(126.714%) scaleX(1.5);
+    }
+    50% {
+        transform: translateX(92.714%) scaleX(1.5);
+    }
+    99% {
+        transform: translateX(0%) scaleX(1.5);
+    }
+    100% {
+        transform: translateX(0%) scaleX(1);
+    }
+}
+/*---- 2.31 Login / Signup (input field) ----*/
+.front-page {
+    margin: 50px 0 0 0;
+}
+.signup-main > div, .login-main > div {
+    width: 50%;
+    max-width: 400px;
+}
+@media (max-width: 600px) {
+    .signup-main > div, .login-main > div {
+        width: 95%;
+    }
+}
+.front-page input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    border-radius: 18px;
+    border-style: none;
+    border: 1px solid #003471; 
+    color: #176ccc;
+    line-height: 18px;
+    font-size: 16px;
+    padding: 8px 18px;
+    width: 100%;
+    background: inherit;
+    transition: all .5s ;
+
+}
+.front-page input:hover, .front-page input:focus {
+    box-shadow: #003471 1px 1px 5px;
+}
+.front-page label {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    line-height: 18px;
+    padding: 0 2px;
+    margin: 8px 18px;
+    transform-origin: left;
+    transform: scale(1) translate(0);
+    transition: transform .4s ease;
+    background: inherit;
+    cursor: inherit;
+}
+.front-page input:focus + label {
+    transform: scale(.8) translate(-10px, -20px);
+    color: #176ccc;
+    text-shadow: 2px 2px 50px rgba(0,0,0,1);
+    background: rgba(0,0,0,.9);
+    box-shadow: rgba(0,0,0,.9) 1px 1px 5px 5px;
+
+}
+.front-page input:valid + label {
+    transform: scale(.8) translate(-10px, -35px);
+    color: #176ccc;
+}
+.front-page input:focus {
+    outline: none 
+}
+.field-container {
+    position: relative;
+    height: 58px;
+    margin: 5px 0 0;
+}
+button {
+    outline: none;
+    box-shadow: none;
+    border-style: none;
+}
+button.btn1 {
+    padding: 5px 35px;
+    border-radius: 15px;
+    border: 1px solid #003471;
+    background: #003471;
+    color: #fff;
+    box-shadow: #003471 1px 1px 5px;
+    transition: all .3s;
+    cursor: pointer;
+}
+button.btn1:hover {
+    /* transform: scale(1.1); */
+    padding: 5px 40px;
+    border-radius: 16px;
+    background: #001935;
+    box-shadow: #001935 1px 2px 15px;
+}
+button.btn1.btn2 {
+    border: 1px solid #fff;
+    margin: 10px 0 0 0;
+}
