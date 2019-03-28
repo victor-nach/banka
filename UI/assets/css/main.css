@@ -5,19 +5,13 @@
 1. General styles
 2. Landing Page
     2.1 General styles
-    2.3 Login / Signup
-    2.3 
-    2.4 Introductory section
-    2.5 Candidates
-    2.6 offices
-    2.7 parties
-    2.8 Footer styles
+    2.2 Login / Signup (animations)
+    2.2 Login / Signup (input field)
 3. Dashboard Area General Styles
-4. Dashboard Profile page
-5. Dashboard Candidates page
-6. Dashboard manage candidates page
-dashboard
-n. Front Footer styles
+4. Dashboard Account page
+    4.1. general
+    4.2.account balance
+    4.3.account details
 
 /*
 ================================================
@@ -165,13 +159,13 @@ main {
     text-align: center;
     width: 80%;
 } 
-main h2 {
+main > h2 {
     margin: 0 0 20px 0;
 }
-main p:nth-child(2) {
+main > p:nth-child(2) {
     margin: 0 0 20px 0;
 }
-main p:nth-child(3) {
+main > p:nth-child(3) {
     margin: 20px 0 10px 0;
 }
 main button {
@@ -220,7 +214,7 @@ footer {
     }
 }
 
-/*---- 2.31 Login / Signup animations ----*/
+/*---- 2.2 Login / Signup (animations) ----*/
 .form-outer-container {
     display: flex;
     width: 100%;
@@ -394,7 +388,7 @@ footer {
         transform: translateX(0%) scaleX(1);
     }
 }
-/*---- 2.31 Login / Signup (input field) ----*/
+/*---- 2.3 Login / Signup (input field) ----*/
 .front-page {
     margin: 50px 0 0 0;
 }
@@ -486,4 +480,577 @@ button.btn1:hover {
 button.btn1.btn2 {
     border: 1px solid #fff;
     margin: 10px 0 0 0;
+}
+
+/*
+================================================
+3. Dashboard Area General Styles
+================================================
+
+*/
+:root {
+    --border: 1px solid rgba(255,255,255,.2);  /* border color */
+    --dsh-bck-clr: #293145f8;  /* dashboard background color #293145 */
+    --dsh-bck-clr-2: #384466bb;  /* dashboard background color #293145 */
+    --lgt-clr-2: #b3b9c521; /* light text color 2 */
+    --lgt-clr-3: #b3b9c5; /* light text color 3 */
+    --lgt-clr-4: #7f8899; /* light text color 4 */
+    --alt-clr-1: rgb(197, 102, 47); /* alternate text color 1 */
+    --alt-clr-2: rgba(197, 102, 47, 0.4); /* alternate text color 1 */
+    --alt-clr-3: rgb(33, 241, 33); /* alternate text color 3 -green*/
+    --alt-clr-4: rgb(240, 82, 82); /* alternate text color 4 red */
+    --toggle-width: 768px;
+}
+.dashboard-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../img/6.jpg);
+    background-size: cover;
+    filter: blur(2px) grayscale();
+}
+.page-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--dsh-bck-clr);
+    display: flex;
+}
+/*-- navigation styles --*/
+.side-bar {
+    width: 280px;
+    height: 100%;
+    border-right: var(--border);
+    transition: all .3s;
+    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+    overflow: hidden;
+    transform: max-width 1s;
+}
+
+.side-bar:hover {
+    width: 290px;
+}
+/* control sidebar on small screens */
+@media (max-width: 768px) {
+    .side-bar {
+        max-width: 0;
+    }
+    .side-bar.show {
+        width: 340px;
+        max-width: 340px;
+    }
+}
+.toggle-close {
+    height: 50px;
+    max-height: 0;
+    transition: max-height .5s;
+    overflow: hidden;
+    padding: 5px 20px;
+    text-align: right;
+    cursor: pointer;
+    border-bottom: var(--border)
+}
+.show .toggle-close {
+    max-height: 50px;
+}
+.toggle-close i {
+    font-size: 40px;
+    color: var(--alt-clr-1)
+}
+.toggle-close i:hover {
+    text-shadow: var(--lgt-clr-3) 1px 1px 5px;
+}
+.profile-photo:hover {
+    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+}
+.profile-photo {
+    height: 100px;
+    border-bottom: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    transition: all .3s ease;
+}
+.profile-photo:hover {
+    height: 105px;
+    box-shadow: var(--alt-clr-1) 1px 1px 10px;
+}
+.photo-outer {
+    height: 90px;
+    width: 90px;
+    border: var(--border);
+    border: 1px solid var(--alt-clr-1);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 10px;
+}
+.photo-inner {
+    height: 80px;
+    width: 80px;
+    border: 1px solid var(--alt-clr-2);
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+.profile-name {
+    width: 100px;
+}
+.profile-name p {
+    color: var(--lgt-clr-3)
+}
+.profile-name p span {
+    color: var(--alt-clr-1);
+    font-weight: 400;
+    font-size: 13px;
+}
+.nav-links {
+    padding: 15px;
+}
+.nav-links > div {
+    margin: 20px 0;
+}
+.link-title {
+    font-size: 13px;
+    color: var(--alt-clr-1);
+    font-weight: 400;
+    padding-bottom: 7px; 
+}
+.nav-links li a {
+    color: var(--lgt-clr-3);
+    padding: 8px 0 2px 0;
+    display: block;
+    position: relative;
+    transition: all .5s ease-in-out;
+}
+.nav-links li a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--alt-clr-1);
+    transition: all .5s ease-in-out;
+}
+.nav-links li a:hover {
+    padding-left: 4px;
+}
+.nav-links li a:hover::before {
+    width: 100%;
+}
+.nav-links li a.active::before {
+    width: 100%;
+}
+.nav-links i {
+    color: var(--alt-clr-1);
+    margin: 0 8px 0 0;
+}
+.main-body {
+    width: 100%;
+    display: grid;
+    grid-template-areas: 
+       "header header"
+       "breadcrumb breadcrumb"
+       "inner-body aside"
+       "footer footer"
+    ;
+    grid-template-rows: 50px 35px auto 35px;   
+    grid-template-columns: 100% 0%;
+    overflow-y: scroll;
+    transition: all .5s;
+}
+/* control main body visibilty when side bar is visible */
+@media (max-width: 768px) {
+    .side-bar.show + .main-body {
+        filter: blur(15px);
+        -webkit-filter: blur(15px);
+        
+    }
+}
+.dashboard-header {
+    grid-area: header;
+    border-bottom: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+}
+.dashboard-header h3 {
+    text-shadow: var(--alt-clr-1) 1px 1px;
+}
+.dashboard-header .nav-controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.nav-controls p {
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--alt-clr-1);
+    transition: all .3s;
+}
+.nav-controls i {
+    font-size: 20px;
+    padding-left: 5px; 
+}
+.nav-controls p:hover {
+    text-shadow: var(--lgt-clr-3) 1px 1px 1px;
+}
+.nav-controls i.fa-bars {
+    font-size: 25px;
+}
+.toggle-open {
+    max-width: 0;
+    overflow: hidden;
+}
+@media (max-width: 768px) {
+    .toggle-open {
+        max-width: 50px;
+    }
+}
+.breadcrumb {
+    grid-area: breadcrumb;
+    border-bottom: var(--border);
+    text-align: left;
+    font-size: 11px;
+    padding: 10px ;
+    display: flex;
+    align-items: center;
+}
+.bi {
+    display: inline;
+    color: var(--lgt-clr-4);
+}
+.bi span{
+    color: var(--lgt-clr-3);
+}
+.bi + .bi::before {
+    content: "/";
+    display: inline-block;
+    padding: 0 8px;
+    color: var(--lgt-clr-4);
+}
+.inner-body {
+    grid-area: inner-body;
+    height: auto;
+    border-right: var(--border);
+}
+.side-links {
+    grid-area: aside;
+}
+.dashboard-footer {
+    grid-area: footer;
+    border-top: var(--border);
+}
+@media (max-width: 768px) {
+    .main-body {
+        grid-template-areas: 
+           "header header"
+           "breadcrumb breadcrumb"
+           "inner-body inner-body"
+           "aside aside"
+           "footer footer"
+        ;
+        grid-template-rows: 50px 35px auto 0 35px;   
+        grid-template-columns: 80% 20%;
+    }
+}
+/*
+================================================
+4. Dashboard Account page
+================================================
+*/
+
+/*---- 4.1. general ----*/
+.accounts.inner-body {
+    display: grid;
+    grid-template-areas: 
+        "balance details details"
+        "chart chart cards"
+        "chart chart new-acc"
+        "transactions transactions transactions"
+    ;
+    grid-template-rows: 150px 200px 200px auto;   
+    grid-template-columns: 1fr 1fr 1fr; 
+}
+@media (min-width: 768px) and (max-width: 1024px){
+    .accounts.inner-body {
+        grid-template-areas: 
+            "balance details details"
+            "chart chart cards"
+            "chart chart new-acc"
+            "transactions transactions transactions"
+        ;
+        grid-template-rows: 220px 200px 200px auto;   
+        grid-template-columns: 1.2fr 1fr 1fr; 
+    }
+}
+@media (max-width: 768px) {
+    .accounts.inner-body {
+        grid-template-areas: 
+            "balance details details"
+            "chart chart cards"
+            "chart chart new-acc"
+            "transactions transactions transactions"
+        ;
+        grid-template-rows: 200px 200px 200px auto;   
+        grid-template-columns: 1fr 1fr 1fr; 
+    }
+}
+
+/*---- 4.2.account balance ----*/
+.accounts.inner-body > div > div {
+    height: 100%;
+    position: relative;
+    padding: 0 20px;
+}
+.balance {
+    grid-area: balance;
+}
+.accounts.inner-body .balance > div {
+    padding-right: 0;
+}
+.panel-title::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0px;
+    height: 3px;
+    width: 25px;
+    background: var(--alt-clr-1);
+}
+.balance .panel-outer {
+    padding-right: 10px;
+}
+.balance .panel-inner {
+    justify-content: space-around;
+}
+@media (max-width: 768px) {
+    .balance .panel-inner {
+        flex-direction: column;
+    }
+}
+.balance .panel-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.current-balance {
+    margin-left: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.current-balance p {
+    font-size: 30px;
+    color: var(--alt-clr-1)
+}
+.current-balance span{
+    font-size: 11px;
+}
+.current-balance span i{
+    color: var(--alt-clr-3);
+    font-size: 15px;
+}
+
+/*---- 4.3.account details ----*/
+.account-details {
+    grid-area: details;
+}
+.account-details .panel-title::before {
+    height: 0;
+}
+.accounts.inner-body .account-details > div {
+    padding-left: 0;
+}
+.account-details .panel-outer {
+    padding-left: 10px;
+}
+.account-details .panel-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    align-content: space-evenly;
+    justify-content: center;
+}
+@media (max-width: 1024px) and (min-width: 500px) {
+    .account-details .panel-inner {
+        padding-left: 20px;
+    }
+}
+.account-details p {
+    font-size: 13px;
+    color: var(--lgt-clr-3);
+    padding: 2px 0;
+}
+.account-details p span{
+    color: var(--alt-clr-1);
+    font-weight: bolder;
+    letter-spacing: 1.5px;
+    padding-left: 5px;
+}
+/*---- 4.4. balance chart ----*/
+.balance-chart {
+    grid-area: chart;
+}
+.balance-chart > div {
+    padding-left: 20px;
+}
+/*---- 4.3. cards ----*/
+.cards {
+    grid-area: cards;
+}
+/*---- 4.6. create new account----*/
+.create-new {
+    grid-area: new-acc;
+}
+.create-new .panel-inner {
+    justify-content: center;
+    align-items: center;
+}
+.create-new a {
+    display: block;
+    width: 60%;
+    height: 60%;
+    background: var(--alt-clr-3);
+    border-radius: 10px;
+    position: relative;
+    transition: all .3s;
+    color: var(--dsh-bck-clr);
+    
+}
+.create-new a:hover {
+    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+    width: 62%;
+    height: 62%;
+}
+@media (max-width: 1024px) {
+    .create-new a {
+        width: 80%;
+        height: 80%;
+    }
+    .create-new a:hover {
+        width: 82%;
+        height: 82%;
+    }
+}
+.create-new a > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+.create-new a > i {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    color: var(--dsh-bck-clr-1);
+    font-size: 20px;
+    text-shadow: var(--alt-clr-3) 1px 1px 5px;
+}
+/*---- 4.7. transactions table----*/
+.transactions {
+    grid-area: transactions;
+}
+.trans-table {
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr 1fr 1fr;
+    grid-auto-rows: 40px; 
+    width: 100%;
+    align-items: center;
+}
+.trans-table .trans-date p span:nth-child(2)  {
+    display: none;
+}
+.trans-table .trans-info p span:nth-child(2)  {
+    display: none;
+}
+.trans-table > div {
+    border-bottom: 1px solid var(--lgt-clr-2);
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.trans-table .hdng {
+    border-bottom: 1px solid var(--alt-clr-1);
+    color: var(--alt-clr-1);
+    font-weight: 600;
+}
+.trans-table .btm-row {
+    border-bottom: none;
+}
+.credit {
+    color: var(--alt-clr-3);
+}
+.debit {
+    color: var(--alt-clr-4);
+}
+@media (max-width: 768px) {
+    .trans-table {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1.2fr;
+        grid-auto-rows: 40px; 
+    }    
+    .trans-table .trans-date p span:nth-child(1)  {
+        display: none;
+    }
+    .trans-table .trans-date p span:nth-child(2)  {
+        display: unset;
+    }
+    .trans-table .trans-info p span:nth-child(2)  {
+        display: none;
+    }
+    .trans-table .trans-info p span:nth-child(1)  {
+        display: unset;
+    }
+}
+/*--- general dashboardd panel styles ---*/
+.panel-title {
+    height: 30px;
+    border-bottom: var(--border);
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding: 0 0 5px 0;
+    position: relative;
+}
+.panel-title h4 {
+    font-size: 13px;
+}
+.panel-outer {
+    height: calc(100% - 30px);
+    width: 100%;
+    padding: 20px 0;
+}
+.panel-inner {
+    height: 100%;
+    width: 100%;
+    background: var(--dsh-bck-clr-2);
+    border-radius: 10px;
+    display: flex;
+    position: relative;
+    padding: 10px;
+}
+.panel-heading h5{
+    font-size: 13px;
+    color: var(--lgt-clr-3);
+    font-weight: 400;
+    /* color: var(--alt-clr-1) */
 }
