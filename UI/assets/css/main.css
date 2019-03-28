@@ -12,7 +12,12 @@
     4.1. general
     4.2.account balance
     4.3.account details
-
+    4.4. balance chart
+    4.5. cards
+    4.6. create new account
+    4.7. transactions table
+    4.8. general dashboardd panel styles
+5. Dashboard New Account page
 /*
 ================================================
 1. General Styles
@@ -253,13 +258,15 @@ footer {
     0%{ transform: scale(1,1); }
     100%{ transform: scale(0,0); }
 } */
+.form {
+    background: rgba(0,0,0,.5);
+}
 .signup-main, .login-main {
     position: absolute;
     top: 0;
     right: 0;
     height: 100%;
     width: 65%;
-    background: rgba(0,0,0,.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -491,7 +498,9 @@ button.btn1.btn2 {
 :root {
     --border: 1px solid rgba(255,255,255,.2);  /* border color */
     --dsh-bck-clr: #293145f8;  /* dashboard background color #293145 */
+    /* --dsh-bck-clr: rgba(0,0,0,.5);  dashboard background color #293145 */
     --dsh-bck-clr-2: #384466bb;  /* dashboard background color #293145 */
+    /* --dsh-bck-clr-2: rgba(0,0,0,.5);  dashboard background color #293145 */
     --lgt-clr-2: #b3b9c521; /* light text color 2 */
     --lgt-clr-3: #b3b9c5; /* light text color 3 */
     --lgt-clr-4: #7f8899; /* light text color 4 */
@@ -509,7 +518,7 @@ button.btn1.btn2 {
     height: 100%;
     background: url(../img/6.jpg);
     background-size: cover;
-    filter: blur(2px) grayscale();
+    filter: blur(5px);
 }
 .page-wrapper {
     position: absolute;
@@ -911,7 +920,7 @@ button.btn1.btn2 {
 .balance-chart > div {
     padding-left: 20px;
 }
-/*---- 4.3. cards ----*/
+/*---- 4.5. cards ----*/
 .cards {
     grid-area: cards;
 }
@@ -1021,7 +1030,7 @@ button.btn1.btn2 {
         display: unset;
     }
 }
-/*--- general dashboardd panel styles ---*/
+/*--- 4.8. general dashboardd panel styles ---*/
 .panel-title {
     height: 30px;
     border-bottom: var(--border);
@@ -1053,4 +1062,31 @@ button.btn1.btn2 {
     color: var(--lgt-clr-3);
     font-weight: 400;
     /* color: var(--alt-clr-1) */
+}
+/*
+================================================
+5. Dashboard New Account page
+================================================
+*/
+.new-account .panel-inner {
+    background: unset;
+}
+.new-account {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.new-account .form {
+    padding: 50px;
+    border-radius: 10px;
+    border: 1px solid #003471;
+    width: 100%;
+}
+.new-account > div {
+    width: 60%;
+}
+@media (max-width: 768px) {
+    .new-account > div {
+        width: 80%;
+    }
 }

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>BANKA | NEW ACCOUNT </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="assets/fontawesome//css/all.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="assets/css/main.css" />
+    <script defer src="assets/js/dashboard.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-background"></div>
+    <div class="page-wrapper">
+        <nav class="side-bar">
+            <!-- toggle bar close -->
+            <div class="toggle-close">
+                <i class="fas fa-times"></i>
+            </div>
+            <!-- profile-info -->
+            <a class="profile-link" href="">
+                <div class="profile-photo">
+                    <div class="photo-outer">
+                        <div class="photo-inner">
+                            <img src="assets/img/user/profile-photo.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="profile-name">
+                        <p>NYEMAKA MESUT <br> <span>USER</span></p>
+                    </div>
+                </div>
+            </a>
+            <!-- nav-links -->
+            <div class="nav-links">
+                <!-- user-links -->
+                <div class="user-links">
+                    <h4 class="link-title">USER</h4>
+                    <ul>
+                        <li><a href="account.html"><i class="fas fa-money-check"></i>ACCOUNTS</a></li>
+                        <li><a class="active" href="create_account.html"><i class="fas fa-stream"></i>CREATE ACCOUNT</a></li>
+                        <li><a href=""><i class="fas fa-user"></i>PROFILE</a></li>
+                    </ul>
+                </div>
+                <!-- staff-links -->
+                <div class="staff-links">
+                    <h4 class="link-title">STAFF</h4>
+                    <ul>
+                        <li><a href=""><i class="fas fa-coins"></i>CLIENT ACCOUNTS</a></li>
+                    </ul>
+                </div>
+                <!-- cashier-links -->
+                <div class="cashier-links">
+                    <h4 class="link-title">CASHIER</h4>
+                    <ul>
+                        <li><a href=""><i class="fas fa-arrow-right"></i>CREDIT ACCOUNT</a></li>
+                        <li><a href=""><i class="fas fa-arrow-left"></i>DEBIT ACCOUNT</a></li>
+                    </ul>
+                </div>
+                <!-- admin-links -->
+                <div class="admin-links">
+                    <h4 class="link-title">ADMIN</h4>
+                    <ul>
+                        <li><a href=""><i class="fas fa-user-cog"></i>MANAGE USER ACCOUNT</a></li>
+                        <li><a href=""><i class="fas fa-user-plus"></i>CREATE USER ACCOUNT</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- main-body -->
+        <main class="main-body">
+            <!-- header -->
+            <header class="dashboard-header">
+                <h3>BANKA</h3>
+                <div class="nav-controls">
+                    <div class="toggle-open">
+                        <p><i class="fas fa-bars"></i></p>
+                    </div>
+                    <a href="index.html">
+                        <div class="sign-out">
+                            <p>SIGN OUT <i class="fas fa-sign-out-alt"></i></p>
+                        </div>
+                    </a>
+                </div>
+            </header>
+            <!-- breadcrumb -->
+            <div class="breadcrumb">
+                <ul>
+                    <li class="bi">HOME</li>
+                    <LI class="bi"><span>ACCOUNTS</span></LI>
+                </ul>
+            </div>
+            <!-- inner body -->
+            <div class="inner-body new-account">
+                <!-- balance -->
+                <div class="">
+                    <div>
+                        <div class="panel-title">
+                            <h4>CREATE NEW ACCOUNT</h4>
+                        </div>
+                        <div class="panel-outer">
+                            <div class="panel-inner">
+                                <div class="form">
+                                    <h1>NEW ACCOUNT</h1>
+                                    <p>create a new bank account</P>
+                                    <form action="" class="signin-form front-page">
+                                        <!-- email -->
+                                        <div class="field-container">
+                                            <input type="text" id="email-s" required>
+                                            <label for="email-s">email</label>
+                                        </div>
+                                        <!-- firstname -->
+                                        <div class="field-container">
+                                            <input type="text" id="fname" required>
+                                            <label for="fname">firstname</label>
+                                        </div>
+                                        <!-- lastname -->
+                                        <div class="field-container">
+                                            <input type="text" id="lname" required>
+                                            <label for="lname">lastname</label>
+                                        </div>
+                                        <!-- account type -->
+                                        <div class="field-container">
+                                            <input type="text" id="acc-type" required>
+                                            <label for="acc-type">account type</label>
+                                        </div>                                
+                                        <!-- submit -->
+                                        <button class="btn1">create</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <aside class="side-links">
+
+            </aside>
+            <footer class="dashboard-footer">
+                <p>Andela Bootcamp project @2019 By victor_nach</p>
+            </footer>
+        </main>
+    </div>
+</body>
+
+</html>
