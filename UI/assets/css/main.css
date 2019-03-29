@@ -488,6 +488,14 @@ button.btn1.btn2 {
     border: 1px solid #fff;
     margin: 10px 0 0 0;
 }
+button.btn1.dsh {
+    background: #001935;
+    box-shadow: #001935 1px 2px 15px;
+}
+button.btn1:hover {
+    padding: 5px 40px;
+    box-shadow: #001935 1px 2px 15px 3px;
+}
 
 /*
 ================================================
@@ -1132,3 +1140,33 @@ button.btn1.btn2 {
     color: var(--lgt-clr-3);
     justify-self: end;
 }
+/*
+================================================
+5. Dashboard All Bank Accounts Page
+================================================
+*/
+.all-b-acc {
+    display: flex;
+    justify-content: center;
+ }
+.all-b-acc .panel-outer{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto;
+}
+@media (min-width: 1024px) and (max-width: 1300) {
+    .all-b-acc .panel-outer{
+        grid-template-columns: auto auto;
+    }
+}
+@media (min-width: 1300px) {
+    .all-b-acc .panel-outer{
+        grid-template-columns: auto auto auto;
+    }
+}
+.all-b-acc .panel-inner  {
+    height: auto;
+    width: 310px;
+    flex-direction: column;
+}
+
