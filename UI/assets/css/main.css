@@ -492,6 +492,10 @@ button.btn1.dsh {
     background: #001935;
     box-shadow: #001935 1px 2px 15px;
 }
+button.btn1.dsh2 {
+    background: var(--alt-clr-4);
+    /* box-shadow: var(--alt-clr-4) 1px 2px 15px; */
+}
 button.btn1:hover {
     padding: 5px 40px;
     box-shadow: #001935 1px 2px 15px 3px;
@@ -1100,7 +1104,7 @@ button.btn1:hover {
 }
 /*
 ================================================
-5. Dashboard User Profile Page
+6. Dashboard User Profile Page
 ================================================
 */
 .inner-body.user-profile {
@@ -1123,7 +1127,7 @@ button.btn1:hover {
 }
 .profile-details {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
     grid-auto-rows: 40px;
     margin: 20px 0;
 }
@@ -1142,7 +1146,7 @@ button.btn1:hover {
 }
 /*
 ================================================
-5. Dashboard All Bank Accounts Page
+7. Dashboard All Bank Accounts Page
 ================================================
 */
 .all-b-acc {
@@ -1169,4 +1173,47 @@ button.btn1:hover {
     width: 310px;
     flex-direction: column;
 }
-
+/*
+================================================
+8. Dashboard Single Bank Account Page
+================================================
+*/
+.go-back h4 {
+    color: var(--alt-clr-1);
+    margin-top: 10px;
+    transition: all .3s;
+}
+.go-back h4:hover {
+    text-shadow: #001935 1px 5px 15px; 
+}
+.go-back h4:hover i {
+    margin-right: 20px; 
+}
+.go-back i {
+    margin-right: 10px;
+}
+.recent-trans {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    /* border: var(--border); */
+    border-radius: 10px;
+    padding: 10px; 
+    grid-row-gap: 15px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.recent-trans-title p{
+    color: var(--alt-clr-1);
+    font-weight: bolder;
+    font-size: 20px;
+    margin: 15px 0 10px 0;
+    border-bottom: 1px solid var(--alt-clr-1);
+}
+.recent-trans > p {
+    border-bottom: 1px solid var(--lgt-clr-2);
+}
+.recent-trans > p:nth-child(1),
+.recent-trans > p:nth-child(2),
+.recent-trans > p:nth-child(3) {
+    border-bottom: 1px solid var(--alt-clr-1);
+}
