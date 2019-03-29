@@ -467,7 +467,7 @@ button {
     box-shadow: none;
     border-style: none;
 }
-button.btn1 {
+.btn1 {
     padding: 5px 35px;
     border-radius: 15px;
     border: 1px solid #003471;
@@ -1089,4 +1089,46 @@ button.btn1.btn2 {
     .new-account > div {
         width: 80%;
     }
+}
+/*
+================================================
+5. Dashboard User Profile Page
+================================================
+*/
+.inner-body.user-profile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.user-profile .panel-inner {
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+}
+.user-profile > div {
+    width: 70%;
+}
+@media (max-width: 768px) {
+    .user-profile > div {
+        width: 80%;
+    }
+}
+.profile-details {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-auto-rows: 40px;
+    margin: 20px 0;
+}
+.profile-details > p {
+    color: var(--alt-clr-1);
+    justify-self: start;
+}
+.profile-details > p:nth-child(even) {
+    color: var(--alt-clr-1);
+    justify-self: start;
+    margin-left: 10px;
+}
+.profile-details > p:nth-child(odd) {
+    color: var(--lgt-clr-3);
+    justify-self: end;
 }
