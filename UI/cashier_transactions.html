@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BANKA | USER PROFILE </title>
+    <title>BANKA | TRANSFER </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="assets/fontawesome//css/all.css">
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/main.css" />
@@ -38,9 +38,9 @@
                 <div class="user-links">
                     <h4 class="link-title">USER</h4>
                     <ul>
-                        <li><a href="account.html"><i class="fas fa-money-check"></i>ACCOUNTS</a></li>
-                        <li><a href="user_create_account.html"><i class="fas fa-stream"></i>CREATE ACCOUNT</a></li>
-                        <li><a class="active" href="user_profile.html"><i class="fas fa-user"></i>PROFILE</a></li>
+                        <li><a href="user_account.html"><i class="fas fa-money-check"></i>ACCOUNTS</a></li>
+                        <li><a class="active" href="user_create_account.html"><i class="fas fa-stream"></i>CREATE ACCOUNT</a></li>
+                        <li><a href="user_profile.html"><i class="fas fa-user"></i>PROFILE</a></li>
                     </ul>
                 </div>
                 <!-- staff-links -->
@@ -87,40 +87,39 @@
             <div class="breadcrumb">
                 <ul>
                     <li class="bi">HOME</li>
-                    <LI class="bi"><span>USER PROFILE</span></LI>
+                    <LI class="bi"><span>TRANSACTIONS</span></LI>
                 </ul>
             </div>
             <!-- inner body -->
-            <div class="inner-body user-profile">
-                <!-- profile -->
+            <div class="inner-body cahier new-account">
+                <!-- balance -->
                 <div class="">
-                    <div class="panel-title">
-                        <h4>USER PROFILE</h4>
-                    </div>
-                    <div class="panel-outer">
-                        <div class="panel-inner">
-                            <div class="photo-outer">
-                                <div class="photo-inner">
-                                    <img src="assets/img/user/profile-photo.jpg" alt="">
+                    <div>
+                        <div class="panel-title">
+                            <h4>ACCOUNT TRANSACTIONS</h4>
+                        </div>
+                        <div class="panel-outer">
+                            <div class="panel-inner">
+                                <div class="form">
+                                    <h1>TRANSACTIONS</h1>
+                                    <p>credit or debit a customer's bank account</P>
+                                    <form action="" class="signin-form front-page">
+                                        <!-- account number -->
+                                        <div class="field-container">
+                                            <input type="text" id="acc-number" required>
+                                            <label for="acc-number">account number</label>
+                                        </div>
+                                        <!-- amount -->
+                                        <div class="field-container">
+                                            <input type="text" id="amount" required>
+                                            <label for="amount">amount</label>
+                                        </div>                                                                 
+                                        <!-- submit -->
+                                        <p class="trans-type">TRANSACTION TYPE</p>
+                                        <button class="btn1">CREDIT</button>
+                                        <button class="btn1">DEBIT</button>
+                                    </form>
                                 </div>
-                            </div>
-                            <div class="profile-details">
-                                <p>FULL NAME :</p>
-                                <p>MYEMAKA MESUT</p>
-                                <p>EMAIL ADDRESS :</p>
-                                <p>nyemakamesut@gmail.com</p>
-                                <p>ACCOUNT TYPE :</p>
-                                <p>USER</p>
-                                <p>NATIONALITY :</p>
-                                <p>GERMAN</p>
-                                <p>ADDRESS :</p>
-                                <p>12 OLE STREET, BROADWAY EMIRATES</p>
-                                <p>NO. OF BANK ACCOUNTS :</p>
-                                <p>2</p>
-                                <p>TOTAL BALANCE :</p>
-                                <p>N 1,232,342.00</p>
-                            </div>
-                            <div><button class="btn1">EDIT PROFILE</button></div>
                             </div>
                         </div>
                     </div>

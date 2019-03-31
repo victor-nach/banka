@@ -425,6 +425,25 @@ footer {
     transition: all .5s ;
 
 }
+select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    border-radius: 18px;
+    border-style: none;
+    border: 1px solid #003471; 
+    color: #fff;
+    line-height: 18px;
+    font-size: 16px;
+    padding: 8px 18px;
+    width: 100%;
+    background: inherit;
+    transition: all .5s ;
+}
+.front-page select:focus {
+    outline: none 
+}
 .front-page input:hover, .front-page input:focus {
     box-shadow: #003471 1px 1px 5px;
 }
@@ -456,6 +475,34 @@ footer {
 }
 .front-page input:focus {
     outline: none 
+}
+select {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    border-radius: 18px;
+    border-style: none;
+    border: 1px solid #003471; 
+    color: #fff;
+    line-height: 18px;
+    font-size: 16px;
+    padding: 8px 18px;
+    width: 100%;
+    background: inherit;
+    cursor: pointer;
+    transition: all .5s ;
+}
+select:focus, select:hover {
+    outline: none 
+}
+option {
+    outline: none;
+    background: rgba(0,0,0,.5);
+}
+option:focus, option:hover {
+    outline: none ;
+    background: inherit;
 }
 .field-container {
     position: relative;
@@ -1216,4 +1263,12 @@ button.btn1:hover {
 .recent-trans > p:nth-child(2),
 .recent-trans > p:nth-child(3) {
     border-bottom: 1px solid var(--alt-clr-1);
+}
+/*
+================================================
+9. Dashboard Cashier transactions
+================================================
+*/
+.trans-type {
+    margin: 20px 0 15px 0;
 }
