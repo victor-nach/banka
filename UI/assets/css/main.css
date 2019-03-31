@@ -1205,7 +1205,7 @@ button.btn1:hover {
     grid-gap: 10px;
     grid-template-columns: auto;
 }
-@media (min-width: 1024px) and (max-width: 1300) {
+@media (min-width: 1024px) and (max-width: 1300px) {
     .all-b-acc .panel-outer{
         grid-template-columns: auto auto;
     }
@@ -1217,8 +1217,9 @@ button.btn1:hover {
 }
 .all-b-acc .panel-inner  {
     height: auto;
-    width: 310px;
+    width: 320px;
     flex-direction: column;
+    align-items: center;
 }
 /*
 ================================================
@@ -1271,4 +1272,34 @@ button.btn1:hover {
 */
 .trans-type {
     margin: 20px 0 15px 0;
+}
+/*
+================================================
+10. Dashboard All User Profile Page
+================================================
+*/
+.all-b-acc {
+    display: flex;
+    justify-content: center;
+ }
+.all-b-acc .panel-outer{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: auto;
+}
+@media (min-width: 1024px) and (max-width: 1300px) {
+    .all-b-acc.user .panel-outer{
+        grid-template-columns: auto auto;
+    }
+}
+@media (min-width: 1300px) {
+    .all-b-acc.user .panel-outer{
+        grid-template-columns: auto auto auto;
+    }
+}
+.all-b-acc.user .panel-inner  {
+    height: auto;
+    width: 320px;
+    flex-direction: column;
+    align-items: center;
 }
