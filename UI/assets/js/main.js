@@ -45,3 +45,13 @@ modal.addEventListener('click', (evt) => {
     }
 });
 
+let logInButton = document.getElementById("login-button");
+logInButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'user_account.html'
+});
+let signUpButton = document.getElementById("signup-button");
+signUpButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.location.href = 'user_account.html'
+});
