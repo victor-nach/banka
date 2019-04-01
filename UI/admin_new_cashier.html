@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>BANKA | SINGLE ACCOUNT </title>
+    <title>BANKA | NEW CASHIER </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="assets/fontawesome//css/all.css">
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/main.css" />
@@ -24,11 +24,11 @@
                 <div class="profile-photo">
                     <div class="photo-outer">
                         <div class="photo-inner">
-                            <img src="assets/img/user/robben-small.jpg" alt="">
+                            <img src="assets/img/user/admin.jpg" alt="">
                         </div>
                     </div>
                     <div class="profile-name">
-                        <p>ARJEN OFUKWU <br> <span>STAFF</span></p>
+                        <p>CHRIS EWU <br> <span>ADMIN</span></p>
                     </div>
                 </div>
             </a>
@@ -47,7 +47,7 @@
                 <div class="staff-links">
                     <h4 class="link-title">STAFF</h4>
                     <ul>
-                        <li><a class="active" href="staff_all_accounts.html"><i class="fas fa-coins"></i>CLIENT ACCOUNTS</a></li>
+                        <li><a href="staff_all_accounts.html"><i class="fas fa-coins"></i>CLIENT ACCOUNTS</a></li>
                     </ul>
                 </div>
                 <!-- cashier-links -->
@@ -62,7 +62,7 @@
                     <h4 class="link-title">ADMIN</h4>
                     <ul>
                         <li><a href="admin_all_user_profiles.html"><i class="fas fa-user-cog"></i>MANAGE USER ACCOUNTS</a></li>
-                        <li><a href="admin_all_cashier_profiles.html"><i class="fas fa-user-cog"></i>MANAGE CASHIER ACCOUNTS</a></li>
+                        <li><a href="admin_all_cashier_profiles.html" class="active" ><i class="fas fa-user-cog"></i>MANAGE CASHIER ACCOUNTS</a></li>
                         <li><a href="admin_all_staff_profiles.html"><i class="fas fa-user-cog"></i>MANAGE STAFF ACCOUNTS</a></li>
                     </ul>
                 </div>
@@ -88,68 +88,55 @@
             <div class="breadcrumb">
                 <ul>
                     <li class="bi">HOME</li>
-                    <li class="bi"> CLIENT ACCOUNTS</li>
-                    <li class="bi"><span>SINGLE ACCOUNT</span></li>
+                    <li class="bi"><span>CASHIER PROFILES</span></li>
+                    <li class="bi"><span>CREATE NEW</span></li>
                 </ul>
             </div>
             <!-- inner body -->
-            <div class="inner-body user-profile">
-                <!-- profile -->
+            <div class="inner-body new-account">
+                <!-- balance -->
                 <div class="">
-                    <div class="panel-title">
-                        <h4>CLIENT ACCOUNT DETAILS</h4>
-                    </div>
-                    <div class="go-back">
-                        <a href="staff_all_accounts.html"><h4><i class="fas fa-arrow-alt-circle-left"></i>back</h4></a>
-                    </div>
-                    <div class="panel-outer">
-                        <div class="panel-inner">
-                            <div class="photo-outer">
-                                <div class="photo-inner">
-                                    <img src="assets/img/user/profile-photo.jpg" alt="">
+                    <div>
+                        <div class="panel-title">
+                            <h4>CREATE NEW PROFILE</h4>
+                        </div>
+                        <div class="go-back">
+                            <a href="admin_all_cashier_profiles.html"><h4><i class="fas fa-arrow-alt-circle-left"></i>back</h4></a>
+                        </div>
+                        <div class="panel-outer">
+                            <div class="panel-inner">
+                                <div class="form">
+                                    <h1>NEW CASHIER</h1>
+                                    <p>create a new cashier profile</P>
+                                    <form action="" class="signin-form front-page">
+                                        <!-- email -->
+                                        <div class="field-container">
+                                            <input type="text" id="email-s" required>
+                                            <label for="email-s">email</label>
+                                        </div>
+                                        <!-- firstname -->
+                                        <div class="field-container">
+                                            <input type="text" id="fname" required>
+                                            <label for="fname">firstname</label>
+                                        </div>
+                                        <!-- lastname -->
+                                        <div class="field-container">
+                                            <input type="text" id="lname" required>
+                                            <label for="lname">lastname</label>
+                                        </div>
+                                        <!-- password -->
+                                        <div class="field-container">
+                                            <input type="password" id="password" required>
+                                            <label for="password">password</label>
+                                        </div>           
+                                        <div class="field-container">
+                                            <input type="password" id="r-password" required>
+                                            <label for="r-password">confirm password</label>
+                                        </div>
+                                        <!-- submit -->
+                                        <button class="btn1">create</button>
+                                    </form>
                                 </div>
-                            </div>
-                            <div class="profile-details">
-                                <p>ACCOUNT OWNER :</p>
-                                <p>MYEMAKA MESUT</p>
-                                <p>ACCOUNT NUMBER :</p>
-                                <p>001992343</p>
-                                <p>EMAIL ADDRESS :</p>
-                                <p>nyemakamesut@gmail.com</p>
-                                <p>ACCOUNT TYPE :</p>
-                                <p>SAVINGS</p>
-                                <p>TOTAL BALANCE :</p>
-                                <p>N 1,232,342.00</p>
-                            </div>
-                            <!-- Recent Transactions -->
-                            <div class="recent-trans-title"><p>RECENT TRANSACATIONS</p></div>
-                            <div class="recent-trans">
-                                    <p>DATE</p>
-                                    <p>TYPE</p>
-                                    <p>AMOUNT</p>
-                                    <p>11/12/34</p>
-                                    <p>CREDIT</p>
-                                    <p class="credit">N 1,122,231.00 <i class="fas fa-caret-up"></i></p>
-                                    <p>11/12/34</p>
-                                    <p>DEBIT</p>
-                                    <p class="debit">N 1,122,231.00 <i class="fas fa-caret-down"></i></p>
-                                    <p>11/12/34</p>
-                                    <p>DEBIT</p>
-                                    <p class="debit">N 1,122,231.00 <i class="fas fa-caret-down"></i></p>
-                                    <p>11/12/34</p>
-                                    <p>CREDIT</p>
-                                    <p class="credit">N 1,122,231.00 <i class="fas fa-caret-up"></i></p>                                    
-                                    <p>11/12/34</p>
-                                    <p>DEBIT</p>
-                                    <p class="debit">N 1,122,231.00 <i class="fas fa-caret-down"></i></p>
-                                    <p>11/12/34</p>
-                                    <p>CREDIT</p>
-                                    <p class="credit">N 1,122,231.00 <i class="fas fa-caret-up"></i></p>
-                                    <p>11/12/34</p>
-                                    <p>DEBIT</p>
-                                    <p class="debit">N 1,122,231.00 <i class="fas fa-caret-down"></i></p>
-                            </div>
-                            <div><button class="btn1 dsh2">DELETE ACCOUNT</button></div>
                             </div>
                         </div>
                     </div>

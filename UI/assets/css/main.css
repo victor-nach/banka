@@ -1303,3 +1303,24 @@ button.btn1:hover {
     flex-direction: column;
     align-items: center;
 }
+
+/*
+================================================
+11. Dashboard All Staff and Cashier Profile Page
+================================================
+*/
+.top-button button.dsh {
+    position: relative;
+    background: var(--alt-clr-3);
+}
+.top-button button.dsh i{
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    font-size: 25px;
+   text-shadow: var(--alt-clr-3) 5px 1px 25px;
+}
+.staff .panel-title {
+    height: 50px;
+    justify-content: space-between;
+}
