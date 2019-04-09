@@ -15,18 +15,19 @@
     "overrides": [
         {
             "files": [
-                "bin/*.js",
-                "lib/*.js"
-            ],
-            "rules": {}
-        },
-        {
-            "files": [
                 "*spec.js"
             ],
             "rules": {
                 "import/no-extraneous-dependencies": 0,
-                "no-undef": 0
+                "no-undef": 0              
+            }
+        },
+        {
+            "files": [
+                "*validatorHelpers.js"
+            ],
+            "rules": {
+                "class-methods-use-this": 0
             }
         }
     ],
