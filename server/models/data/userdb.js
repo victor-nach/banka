@@ -8,7 +8,7 @@ const users = [
     lastname: 'ewu',
     type: 'staff',
     isAdmin: true,
-    hashedPassword: Helpers.hashPassword('chris'),
+    hashedPassword: Helpers.hashPassword('chrisewu'),
   },
   {
     id: 2,

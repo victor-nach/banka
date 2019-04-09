@@ -1,4 +1,4 @@
-import users from '../models/userModel';
+import userModel from '../models/userModel';
 import helper from '../utils/helper';
 
 class userController {
@@ -7,18 +7,13 @@ class userController {
       firstName, lastName, email, password,
     } = req.body;
     const hashedPassword = helper.hashPassword(password);
-
     try {
-      const user = await users.signup(firstName, lastName, email, hashedPassword);
+      const user = await userModel.signup(firstName, lastName, email, hashedPassword);
       const token = await helper.generateToken(user.id, user.type, user.isAdmin);
       res.status(201).json({
         status: 201,
         data: {
-          token,
-          id: user.id,
-          firstName,
-          lastName,
-          email,
+          token, id: user.id, firstName, lastName, email,
         },
       });
     } catch (error) {
@@ -26,6 +21,41 @@ class userController {
         res.status(409).json({
           status: 409,
           error: 'Kindly use another email, this email address has already been used',
+        });
+      } else {
+        res.status(500).json({
+          status: 500,
+          error: 'Internal server error',
+        });
+      }
+    }
+  }
+
+  static async signin(req, res) {
+    const { email, password } = req.body;
+    try {
+      const {
+        id, firstName, lastName, hashedPassword, type, isAdmin,
+      } = await userModel.signin(email);
+      const token = await helper.generateToken(id, type, isAdmin);
+      if (helper.comparePassword(password, hashedPassword) === true) {
+        res.status(200).json({
+          status: 200,
+          data: {
+            token, firstName, lastName, email,
+          },
+        });
+      } else {
+        res.status(403).json({
+          status: 403,
+          error: 'the password you have entered is invalid',
+        });
+      }
+    } catch (error) {
+      if (error.name === 'email_null') {
+        res.status(404).json({
+          status: 404,
+          error: 'this email has been not been registered on this platform',
         });
       } else {
         res.status(500).json({

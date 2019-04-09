@@ -28,29 +28,15 @@ class ValidatorHelpers {
   }
 
   /**
-   * @static checkWhiteSpace
+   * @static noWhiteSpace
    * @description checks if input field contains any white space in between
    * @param { array } route
    * @param { String } fields one or more input fields
    * @memberof ValidatorHelpers
    */
-  static checkWhiteSpace(route, ...fields) {
-    fields.forEach((field) => {
-      route.push(check(field).trim().matches(/^\S{3,}$/).withMessage(`The user's ${field} should not contain spaces in between the characters`));
-    });
-  }
-
-  /**
-   * @static checkMinLength
-   * @description checks the minimum length of characters for theinput field
-   * @param { Array } route
-   * @param { Integer } minLength
-   * @param { String } fields one or more input fields
-   * @memberof ValidatorHelpers
-   */
-  static checkMinLength(route, minLength, ...fields) {
-    fields.forEach((field) => {
-      route.push(check(field).trim().isLength({ min: minLength }).withMessage(`The user's ${field} must contain at least ${minLength} characters`));
+  static noWhiteSpace(path, ...input) {
+    input.forEach((element) => {
+      path.push(check(element).trim().matches(/^\S{3,}$/).withMessage(`There should be no white spaces in the ${element} field`));
     });
   }
 
@@ -58,13 +44,27 @@ class ValidatorHelpers {
    * @static checkMaxLength
    * @description checks the required maximum length of characters for the input field
    * @param { Array } route
-   * @param { Integer } maxLength
+   * @param { Integer } length
    * @param { String } fields one or more input fields
    * @memberof ValidatorHelpers
    */
-  static checkMaxLength(route, maxLength, ...fields) {
+  static checkMaxLength(route, length, ...fields) {
     fields.forEach((field) => {
-      route.push(check(field).trim().isLength({ max: maxLength }).withMessage(`The user's ${field} must not contain more than ${maxLength} characters`));
+      route.push(check(field).trim().isLength({ max: length }).withMessage(`The user's ${field} must have a maximum of ${length} characters`));
+    });
+  }
+
+  /**
+   * @static checkMinLength
+   * @description checks the required maximum length of characters for the input field
+   * @param { Array } route
+   * @param { Integer } length
+   * @param { String } fields one or more input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkMinLength(path, length, ...input) {
+    input.forEach((element) => {
+      path.push(check(element).trim().isLength({ min: length }).withMessage(`You can't have less than ${length} characters in the ${element} field`));
     });
   }
 

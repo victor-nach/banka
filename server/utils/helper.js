@@ -21,6 +21,17 @@ class Helpers {
   static generateToken(payload) {
     return jwt.sign(payload, 'secret');
   }
+
+  /**
+   * @static comparePassword
+   * @description compares two passwords
+   * @param { String } password
+   * @param { String } hashedPassword
+   * @returns { Boolean } True or false
+   */
+  static comparePassword(password, hashedPassword) {
+    return bcrypt.compareSync(password, hashedPassword);
+  }
 }
 
 export default Helpers;
