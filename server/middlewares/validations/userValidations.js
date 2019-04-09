@@ -1,7 +1,7 @@
 import validatorHelpers from '../../utils/validatorHelpers';
 
 const {
-  checkEmpty, checkAlphabets, checkMaxLength, checkMinLength, checkEmail, checkWhiteSpace,
+  checkEmpty, checkAlphabets, checkMinLength, checkMaxLength, checkEmail, noWhiteSpace,
 } = validatorHelpers;
 
 // Validate sign up
@@ -11,11 +11,18 @@ checkAlphabets(checkSignUp, 'firstName', 'lastName');
 checkMinLength(checkSignUp, 3, 'firstName', 'lastName');
 checkMinLength(checkSignUp, 6, 'password');
 checkMaxLength(checkSignUp, 20, 'firstName', 'lastName', 'password');
-checkWhiteSpace(checkSignUp, 'firstName', 'lastName', 'email', 'password');
+noWhiteSpace(checkSignUp, 'firstName', 'lastName', 'email', 'password');
 checkEmail(checkSignUp, 'email');
+
+
+const checkSignIn = [];
+checkEmpty(checkSignIn, 'email', 'password');
+noWhiteSpace(checkSignIn, 'email', 'password');
+checkEmail(checkSignIn, 'email');
 
 const userValidations = {
   checkSignUp,
+  checkSignIn,
 };
 
 export default userValidations;
