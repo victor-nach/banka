@@ -4,8 +4,8 @@ const users = [
   {
     id: 1,
     email: 'chrisewu@gmail.com',
-    firstname: 'Chris',
-    lastname: 'ewu',
+    firstName: 'Chris',
+    lastName: 'ewu',
     type: 'staff',
     isAdmin: true,
     hashedPassword: Helpers.hashPassword('chrisewu'),
@@ -13,8 +13,8 @@ const users = [
   {
     id: 2,
     email: 'arjenofukwu@gmail.com',
-    firstname: 'Arjen',
-    lastname: 'ofukwu',
+    firstName: 'Arjen',
+    lastName: 'ofukwu',
     type: 'staff',
     isAdmin: false,
     hashedPassword: Helpers.hashPassword('arjen'),
@@ -22,8 +22,8 @@ const users = [
   {
     id: 3,
     email: 'cecewilliams@gmail.com',
-    firstname: 'cece',
-    lastname: 'williams',
+    firstName: 'cece',
+    lastName: 'williams',
     type: 'staff',
     isAdmin: false,
     hashedPassword: Helpers.hashPassword('tennis'),
@@ -31,8 +31,8 @@ const users = [
   {
     id: 4,
     email: 'mesutnyemaka@gmail.com',
-    firstname: 'Mesut',
-    lastname: 'nyemaka',
+    firstName: 'Mesut',
+    lastName: 'nyemaka',
     type: 'client',
     isAdmin: false,
     hashedPassword: Helpers.hashPassword('wenger'),
