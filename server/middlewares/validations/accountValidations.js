@@ -19,9 +19,17 @@ checkNumber(checkEditAccount, 'accountNumber');
 checkMinLength(checkEditAccount, 10, 'accountNumber');
 checkMaxLength(checkEditAccount, 10, 'accountNumber');
 
+// Validate bank account delete
+const checkDeleteAccount = [];
+checkEmpty(checkDeleteAccount, 'accountNumber');
+checkNumber(checkDeleteAccount, 'accountNumber');
+checkMinLength(checkDeleteAccount, 10, 'accountNumber');
+checkMaxLength(checkDeleteAccount, 10, 'accountNumber');
+
 const accountValidations = {
   checkCreateAcount,
   checkEditAccount,
+  checkDeleteAccount,
 };
 
 export default accountValidations;

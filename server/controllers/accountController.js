@@ -47,6 +47,34 @@ class AccountController {
       }
     }
   }
+
+  static async deleteAccount(req, res) {
+    const { accountNumber } = req.params;
+    const { userType, isAdmin } = req.user;
+    if (userType === 'client') {
+      res.status(401).json({
+        status: 401, error: 'unauthorized access(user), you need to be an admin',
+      });
+    } else if (isAdmin === false) {
+      res.status(401).json({
+        status: 401, error: 'unauthorized access(staff), you need to be an admin',
+      });
+    } else {
+      try {
+        await accountModel.deleteAccount(accountNumber);
+        res.status(200).json({
+          status: 200,
+          message: 'Account successfuly deleted',
+        });
+      } catch (error) {
+        if (error.name === 'account_null') {
+          res.status(404).json({ status: 404, error: 'Invalid account number, no matches found' });
+        } else {
+          res.status(500).json({ status: 500, error: 'Internal server error' });
+        }
+      }
+    }
+  }
 }
 
 export default AccountController;

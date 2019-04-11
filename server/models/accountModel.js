@@ -57,6 +57,24 @@ class Account {
       status,
     };
   }
+
+  /**
+   * @static editAccount
+   * @description activates or deactivates a client's bank account
+   * @param { Number }  user id
+   * @param { String } accountNumber
+   * @returns { Object } details from the updated account
+   * @memberof User
+   */
+  static deleteAccount(accountNumber) {
+    const account = accountDb.find(element => element.accountNumber === Number(accountNumber));
+    if (!account) {
+      const error = new Error();
+      error.name = 'account_null';
+      throw error;
+    }
+    accountDb.slice(account.id, 1);
+  }
 }
 
 export default Account;

@@ -179,8 +179,23 @@ const assertErrorParams = (errorCode, status, number, done, keyString, token) =>
     done();
   });
 
-describe('PATCH /accounts/<account-number>', () => {
-  before('get admin token', (done) => {
+const assertErrorParamsD = (errorCode, number, done, keyString, token) => chai
+  .request(app)
+  .delete(`${endPoint}accounts/${number}`)
+  .set('x-access-token', token)
+  .end((err, res) => {
+    expect(res).to.have.status(errorCode);
+    expect(res.body).to.be.a('object');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(errorCode);
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
+    done();
+  });
+
+describe('PATCH, DELETE /accounts/<account-number>', () => {
+  before('get staff token', (done) => {
     chai.request(app)
       .post(`${endPoint}/auth/signin`)
       .send(staffData)
@@ -191,6 +206,9 @@ describe('PATCH /accounts/<account-number>', () => {
   });
   it('should return 401 if staff token is provided (unauthorized access)', (done) => {
     assertErrorParams(401, 'active', userAccountNumber, done, 'staff', staffToken);
+  });
+  it('should return 401 if staff token is provided (unauthorized access)', (done) => {
+    assertErrorParamsD(401, userAccountNumber, done, 'staff', staffToken);
   });
 });
 
@@ -302,5 +320,100 @@ describe('PATCH /accounts/<account-number>', () => {
     sinon.stub(accountModel, 'editAccount').throws();
 
     assertErrorParams(500, 'active', userAccountNumber, done, 'server', adminToken);
+  });
+});
+
+// PATCH /acounts/<account-number> Staff can change bank account status
+
+describe('DELETE /accounts/<account-number>', () => {
+  // before('get staff token', (done) => {
+  //   chai.request(app)
+  //     .post(`${endPoint}/auth/signin`)
+  //     .send(adminData)
+  //     .end((err, res) => {
+  //       adminToken = res.body.data.token;
+  //       done();
+  //     });
+  // });
+  it('Staff should be able to delete a bank account status', (done) => {
+    chai
+      .request(app)
+      .delete(`${endPoint}accounts/${userAccountNumber}`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        expect(res.body.message).to.include('deleted');
+        done();
+      });
+  });
+
+  // check account number validations
+  it('should return 404 if account number is omitted', (done) => {
+    chai
+      .request(app)
+      .delete(`${endPoint}accounts`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(404);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(404);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.be.include('not exist');
+        done();
+      });
+  });
+
+  it('should return 400 if account number is not a number', (done) => {
+    assertErrorParamsD(400, '13213dd', done, 'valid number', adminToken);
+  });
+
+  it('should return 400 if account number is not up to 10 digits', (done) => {
+    assertErrorParamsD(400, 123456789, done, 'less than 10', adminToken);
+  });
+
+  it('should return 400 if account number is more than 10 digits', (done) => {
+    assertErrorParamsD(400, 12345678912, done, 'maximum of 10', adminToken);
+  });
+
+  it('should return 404 if account number doesn\'t match any accounts', (done) => {
+    assertErrorParamsD(404, 1234567891, done, 'no matches', adminToken);
+  });
+
+  // token errors
+  it('should return 400 if authentication token is missing', (done) => {
+    chai
+      .request(app)
+      .delete(`${endPoint}/accounts/${userAccountNumber}`)
+      .end((err, res) => {
+        expect(res).to.have.status(400);
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(400);
+        expect(res.body).to.have.property('error');
+        expect(res.body.error).to.be.a('string');
+        expect(res.body.error).to.include('missing');
+        done();
+      });
+  });
+
+  it('should return 400 if authentication token is invalid', (done) => {
+    assertErrorParamsD(400, userAccountNumber, done, 'invalid', invalidToken);
+  });
+
+  it('should return 401 if user token is provided (unauthorized access)', (done) => {
+    assertErrorParamsD(401, userAccountNumber, done, 'user', userToken);
+  });
+
+  it('should return 500 for a server error', (done) => {
+    // tell the user model function for creating an account to throw an error regardless
+    sinon.stub(accountModel, 'deleteAccount').throws();
+
+    assertErrorParamsD(500, userAccountNumber, done, 'server', adminToken);
   });
 });
