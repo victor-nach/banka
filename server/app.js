@@ -14,11 +14,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api/v1', router);
 
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Welcome to banka 2019' });
+  res.status(200).json({
+    status: 200,
+    message: 'Welcome to banka 2019',
+  });
 });
 
 app.all('*', (req, res) => {
-  res.status(404).json({ message: 'Sorry endpoint does not exist' });
+  res.status(404).json({
+    status: 404,
+    error: 'Sorry endpoint does not exist',
+  });
 });
 
 app.listen(PORT);

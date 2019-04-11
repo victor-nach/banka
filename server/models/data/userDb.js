@@ -17,7 +17,7 @@ const users = [
     lastName: 'ofukwu',
     type: 'staff',
     isAdmin: false,
-    hashedPassword: Helpers.hashPassword('arjen'),
+    hashedPassword: Helpers.hashPassword('flyingdutch'),
   },
   {
     id: 3,

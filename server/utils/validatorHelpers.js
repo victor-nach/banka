@@ -92,14 +92,26 @@ class ValidatorHelpers {
   }
 
   /**
+   * @static checkEither
+   * @description checks the required maximum length of characters for the input field
+   * @param { Array } route
+   * @param { Integer } length
+   * @param { String } fields one or more input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkAccStatus(path, field) {
+    path.push(check(field).trim().matches(/\bdormant|active\b/).withMessage(`the account ${field} has to be either savings or current`));
+  }
+
+  /**
    * @static checkFloat
    * @description checks if the value is a valid floating point number
    * @param { Array } route
    * @param { String } value opening balance
    * @memberof ValidatorHelpers
    */
-  static checkFloat(route, value) {
-    route.push(check(value).trim().isFloat().withMessage(`please put in a valid number as ${value}`));
+  static checkNumber(route, value) {
+    route.push(check(value).trim().isNumeric().withMessage(`please put in a valid number as ${value}`));
   }
 }
 
