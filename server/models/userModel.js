@@ -1,4 +1,4 @@
-import userdb from './data/userdb';
+import userdb from './data/userDb';
 
 class User {
   /**

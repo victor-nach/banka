@@ -15,11 +15,11 @@ class Helpers {
   /**
    * @static generateToken
    * @description generates authentication token
-   * @param { Object }payload
+   * @param { Object } payload - { id, type, isAdmin }
    * @returns { String } token
    */
   static generateToken(payload) {
-    return jwt.sign(payload, 'secret');
+    return jwt.sign(payload, 'secret', { expiresIn: '2w' });
   }
 
   /**
@@ -31,6 +31,17 @@ class Helpers {
    */
   static comparePassword(password, hashedPassword) {
     return bcrypt.compareSync(password, hashedPassword);
+  }
+
+  /**
+   * @static decodeToken
+   * @description decodes the token and returns the corresponding payload
+   * @param { String } token
+   * @returns { Object } payload - { id, type, isAdmin }
+   * @memberof Helper
+   */
+  static decodeToken(token) {
+    return jwt.verify(token, 'secret');
   }
 }
 

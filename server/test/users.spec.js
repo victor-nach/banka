@@ -12,7 +12,7 @@ const { expect } = chai;
 const endPoint = '/api/v1/auth';
 
 // standard error response
-const assertError = (path, errorCode, user, done) => chai
+const assertError = (path, errorCode, user, done, keyString) => chai
   .request(app)
   .post(`${endPoint}/${path}`)
   .send(user)
@@ -23,6 +23,7 @@ const assertError = (path, errorCode, user, done) => chai
     expect(res.body.status).to.be.equal(errorCode);
     expect(res.body).to.have.property('error');
     expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
     done();
   });
 
@@ -68,7 +69,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'kindly put in');
   });
 
   it('should return 400 if first name contains numbers', (done) => {
@@ -78,7 +79,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'alphabets');
   });
 
   it('should return 400 if first name is less than 3 characters', (done) => {
@@ -88,7 +89,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, '3');
   });
 
   it('should return 400 if first name is more than 20 characters', (done) => {
@@ -98,7 +99,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, '20');
   });
 
   it('should return 400 if first name contains whitespace', (done) => {
@@ -108,7 +109,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'no white spaces');
   });
 
   // check lastName validations
@@ -118,7 +119,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'kindly put in');
   });
 
   it('should return 400 if last name contains numbers', (done) => {
@@ -128,7 +129,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'alphabets');
   });
 
   it('should return 400 if last name is less than 3 characters', (done) => {
@@ -138,7 +139,7 @@ describe('User sign Up', () => {
       email: 'adamaboy@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, '3');
   });
 
   it('should return 400 if last name is more than 20 characters', (done) => {
@@ -148,7 +149,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, '20');
   });
 
   it('should return 400 if last name contains whitespace', (done) => {
@@ -158,7 +159,7 @@ describe('User sign Up', () => {
       email: 'adama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'no white spaces');
   });
 
   // check email address validations
@@ -168,7 +169,7 @@ describe('User sign Up', () => {
       lastName: 'adama',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'kindly put in');
   });
 
   it('should return 400 if email address contains whitespace', (done) => {
@@ -178,7 +179,7 @@ describe('User sign Up', () => {
       email: 'ad ama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'no white spaces');
   });
 
   it('should return 409 if email address already exists', (done) => {
@@ -188,16 +189,16 @@ describe('User sign Up', () => {
       email: 'chrisewu@gmail.com',
       password: 'Iamthegoat',
     };
-    assertError('signup', 409, user, done);
+    assertError('signup', 409, user, done, 'email');
   });
 
-  it('should return 400 if password address is omitted', (done) => {
+  it('should return 400 if password is omitted', (done) => {
     const user = {
       firstName: 'traore',
       lastName: 'adama',
       email: 'adama@gmail.com',
     };
-    assertError('signup', 400, user, done);
+    assertError('signup', 400, user, done, 'kindly put in');
   });
 
   it('should return 500 for a server error', (done) => {
@@ -210,7 +211,7 @@ describe('User sign Up', () => {
       email: 'adamoa@gmail.com',
       password: 'bellerin',
     };
-    assertError('signup', 500, user, done);
+    assertError('signup', 500, user, done, 'server');
   });
 });
 
@@ -233,10 +234,10 @@ describe('User sign in', () => {
         expect(res.body.data).to.be.a('object');
         expect(res.body.data).to.have.property('token');
         expect(res.body.data.token).to.be.a('string');
-        // expect(res.body.data).to.have.property('firstName');
-        // expect(res.body.data.firstName).to.be.a('string');
-        // expect(res.body.data).to.have.property('lastName');
-        // expect(res.body.data.lastName).to.be.a('string');
+        expect(res.body.data).to.have.property('firstName');
+        expect(res.body.data.firstName).to.be.a('string');
+        expect(res.body.data).to.have.property('lastName');
+        expect(res.body.data.lastName).to.be.a('string');
         expect(res.body.data).to.have.property('email');
         expect(res.body.data.email).to.be.a('string');
         done();
@@ -248,7 +249,7 @@ describe('User sign in', () => {
     const user = {
       password: 'bellerin',
     };
-    assertError('signin', 400, user, done);
+    assertError('signin', 400, user, done, 'kindly put in');
   });
 
   it('should return 400 if email address contains whitespace', (done) => {
@@ -256,7 +257,7 @@ describe('User sign in', () => {
       email: 'ad ama@gmail.com',
       password: 'bellerin',
     };
-    assertError('signin', 400, user, done);
+    assertError('signin', 400, user, done, 'no white spaces');
   });
 
   it('should return 404 if email address does not match any email in the database', (done) => {
@@ -264,14 +265,14 @@ describe('User sign in', () => {
       email: 'christiewu@gmail.com',
       password: 'Iamthegoat',
     };
-    assertError('signin', 404, user, done);
+    assertError('signin', 404, user, done, 'email');
   });
 
   it('should return 400 if password is omitted', (done) => {
     const user = {
       email: 'adama@gmail.com',
     };
-    assertError('signin', 400, user, done);
+    assertError('signin', 400, user, done, 'kindly put in');
   });
 
   it('should return 403 if password is incorrect', (done) => {
@@ -279,7 +280,7 @@ describe('User sign in', () => {
       email: 'adama@gmail.com',
       password: 'tellmemore',
     };
-    assertError('signin', 403, user, done);
+    assertError('signin', 403, user, done, 'password');
   });
 
   it('should return 500 for a server error', (done) => {
@@ -290,6 +291,6 @@ describe('User sign in', () => {
       email: 'chrisewu@gmail.com',
       password: 'chrisewu',
     };
-    assertError('signin', 500, user, done);
+    assertError('signin', 500, user, done, 'server');
   });
 });

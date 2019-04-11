@@ -9,7 +9,8 @@ class userController {
     const hashedPassword = helper.hashPassword(password);
     try {
       const user = await userModel.signup(firstName, lastName, email, hashedPassword);
-      const token = await helper.generateToken(user.id, user.type, user.isAdmin);
+      const { id, type, isAdmin } = user;
+      const token = await helper.generateToken({ id, type, isAdmin });
       res.status(201).json({
         status: 201,
         data: {
@@ -37,7 +38,7 @@ class userController {
       const {
         id, firstName, lastName, hashedPassword, type, isAdmin,
       } = await userModel.signin(email);
-      const token = await helper.generateToken(id, type, isAdmin);
+      const token = await helper.generateToken({ id, type, isAdmin });
       if (helper.comparePassword(password, hashedPassword) === true) {
         res.status(200).json({
           status: 200,

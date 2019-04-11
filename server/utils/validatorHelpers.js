@@ -10,7 +10,7 @@ class ValidatorHelpers {
    */
   static checkEmpty(route, ...fields) {
     fields.forEach((field) => {
-      route.push(check(field).isLength({ min: 1 }).withMessage(`kindly put in the user's ${field}`));
+      route.push(check(field).isLength({ min: 1 }).withMessage(`kindly put in the ${field}`));
     });
   }
 
@@ -77,6 +77,29 @@ class ValidatorHelpers {
    */
   static checkEmail(route, email) {
     route.push(check(email).trim().isEmail().withMessage('please put in a valid email address'));
+  }
+
+  /**
+   * @static checkEither
+   * @description checks the required maximum length of characters for the input field
+   * @param { Array } route
+   * @param { Integer } length
+   * @param { String } fields one or more input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkAccType(path, field) {
+    path.push(check(field).trim().matches(/\bsavings|current\b/).withMessage(`the account ${field} has to be either savings or current`));
+  }
+
+  /**
+   * @static checkFloat
+   * @description checks if the value is a valid floating point number
+   * @param { Array } route
+   * @param { String } value opening balance
+   * @memberof ValidatorHelpers
+   */
+  static checkFloat(route, value) {
+    route.push(check(value).trim().isFloat().withMessage(`please put in a valid number as ${value}`));
   }
 }
 
