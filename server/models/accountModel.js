@@ -13,7 +13,6 @@ class Account {
    */
   static createAccount(userId, type, openingBalance) {
     const user = userDb.find(element => element.id === userId);
-
     const id = accountDb.length;
     const accountNumber = id + 1001456001;
     const newAccount = {
@@ -33,6 +32,29 @@ class Account {
       email: user.email,
       type,
       openingBalance,
+    };
+  }
+
+  /**
+   * @static editAccount
+   * @description activates or deactivates a client's bank account
+   * @param { Number }  user id
+   * @param { String } status status - active or dormant
+   * @param { String } accountNumber
+   * @returns { Object } details from the updated account
+   * @memberof User
+   */
+  static editAccount(status, accountNumber) {
+    const account = accountDb.find(element => element.accountNumber === Number(accountNumber));
+    if (!account) {
+      const error = new Error();
+      error.name = 'account_null';
+      throw error;
+    }
+    account.status = status;
+    return {
+      accountNumber: account.accountNumber,
+      status,
     };
   }
 }
