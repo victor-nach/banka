@@ -6,8 +6,9 @@ import Auth from '../middlewares/authentication/auth';
 
 const router = express.Router();
 
-const { checkDebitAccount } = transactionValidations;
+const { checkDebitAccount, checkcreditAccount } = transactionValidations;
 
 router.post('/:accountNumber/debit', checkDebitAccount, validateResult, Auth.verifyToken, transactionController.debitAccount);
+router.post('/:accountNumber/credit', checkcreditAccount, validateResult, Auth.verifyToken, transactionController.creditAccount);
 
 export default router;

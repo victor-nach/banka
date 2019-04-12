@@ -35,10 +35,11 @@ class Account {
       throw error;
     }
     const oldBalance = account.balance;
-    // let newBalance = type === 'debit' ? oldBalance - amount : oldBalance + amount;
-    let newBalance = oldBalance - amount;
+    let newBalance = type === 'debit' ? Number(oldBalance) - Number(amount) : Number(oldBalance) + Number(amount);
     newBalance = parseFloat(newBalance).toFixed(2);
-    account.balance = newBalance;
+    console.log(account);
+    account.balance = Number(newBalance);
+    console.log(account);
     const transaction = {
       id: transactionDb.length + 1,
       createdOn: new Date(),
