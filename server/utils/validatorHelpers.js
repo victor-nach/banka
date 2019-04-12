@@ -110,8 +110,10 @@ class ValidatorHelpers {
    * @param { String } value opening balance
    * @memberof ValidatorHelpers
    */
-  static checkNumber(route, value) {
-    route.push(check(value).trim().isNumeric().withMessage(`please put in a valid number as ${value}`));
+  static checkNumber(route, ...input) {
+    input.forEach((element) => {
+      route.push(check(element).trim().isNumeric().withMessage(`please put in a valid number as ${element}`));
+    });
   }
 }
 
