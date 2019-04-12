@@ -4,7 +4,7 @@
   "description": "A lightweight banking app",
   "main": "server/app.js",
   "scripts": {
-    "start": "babel-node server/app.js",
+    "start": "node server/app.js",
     "start:dev": "nodemon --exec babel-node server/app.js",
     "test": "nyc --reporter=text mocha server/test --require @babel/register --timeout 10000 --exit || true",
     "coverage": "nyc report --reporter=text-lcov | coveralls ",
