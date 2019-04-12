@@ -16,7 +16,7 @@ const accounts = [
     owner: 2,
     type: 'current',
     cashier: 2,
-    status: 'draft',
+    status: 'dormant',
     balance: 510000.00,
   },
   {
@@ -26,17 +26,7 @@ const accounts = [
     owner: 4,
     type: 'current',
     cashier: 2,
-    status: 'draft',
-    balance: 510000.00,
-  },
-  {
-    id: 4,
-    accountNumber: 1234567804,
-    createdOn: new Date(),
-    owner: 3,
-    type: 'current',
-    cashier: 2,
-    status: 'dormant',
+    status: 'active',
     balance: 510000.00,
   },
 ];

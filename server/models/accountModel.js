@@ -13,8 +13,8 @@ class Account {
    */
   static createAccount(userId, type, openingBalance) {
     const user = userDb.find(element => element.id === userId);
-    const id = accountDb.length;
-    const accountNumber = id + 1001456001;
+    const id = accountDb.length + 1;
+    const accountNumber = id + 1234567800;
     const newAccount = {
       id,
       accountNumber,
@@ -73,7 +73,7 @@ class Account {
       error.name = 'account_null';
       throw error;
     }
-    accountDb.slice(account.id, 1);
+    accountDb.slice(account.id - 1, 1);
   }
 }
 
