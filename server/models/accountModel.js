@@ -59,11 +59,10 @@ class Account {
   }
 
   /**
-   * @static editAccount
-   * @description activates or deactivates a client's bank account
-   * @param { Number }  user id
-   * @param { String } accountNumber
-   * @returns { Object } details from the updated account
+   * @static deleteAccount
+   * @description deletes a client's bank account
+   * @param { Number } accountNumber
+   * @returns {}
    * @memberof User
    */
   static deleteAccount(accountNumber) {
@@ -73,7 +72,7 @@ class Account {
       error.name = 'account_null';
       throw error;
     }
-    accountDb.slice(account.id - 1, 1);
+    accountDb.splice(account.id - 1, 1);
   }
 }
 
