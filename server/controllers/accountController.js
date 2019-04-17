@@ -1,78 +1,70 @@
-import accountModel from '../models/accountModel';
+import AccountModel from '../models/accountModel';
+import ResponseMsg from '../utils/responseMsg';
+
+const { response, responseErr, responseShort } = ResponseMsg;
 
 class AccountController {
+  /**
+   * @static createAccount
+   * @param { Object } req
+   * @param { Object } res
+   * @returns response object
+   * @description handles requests for creation of a new bank account
+   * @memberof AccountController
+   */
   static async createAccount(req, res) {
     const { type, openingBalance } = req.body;
     const openingBalanceF = parseFloat(openingBalance).toFixed(2);
     const { userId } = req.user;
     try {
-      const account = await accountModel.createAccount(userId, type, openingBalanceF);
-      res.status(200).json({
-        status: 200,
-        data: account,
-      });
+      const account = await AccountModel.createAccount(userId, type, openingBalanceF);
+      return response(res, 200, account);
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        error: 'Internal server error broo',
-      });
+      return responseErr(res, 500, 'server error');
     }
   }
 
+  /**
+   * @static editAccount
+   * @param { Object } req
+   * @param { Object } res
+   * @returns response object
+   * @description handles requests for activating or deactivating a bank account
+   * @memberof AccountController
+   */
   static async editAccount(req, res) {
     const { status } = req.body;
     const { accountNumber } = req.params;
-    const { userType, isAdmin } = req.user;
-    if (userType === 'client') {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(user), you need to be an admin',
-      });
-    } else if (isAdmin === false) {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(staff), you need to be an admin',
-      });
-    } else {
-      try {
-        const account = await accountModel.editAccount(status, accountNumber);
-        res.status(200).json({
-          status: 200,
-          data: account,
-        });
-      } catch (error) {
-        if (error.name === 'account_null') {
-          res.status(404).json({ status: 404, error: 'Invalid account number, no matches found' });
-        } else {
-          res.status(500).json({ status: 500, error: 'Internal server error' });
-        }
+
+    try {
+      const account = await AccountModel.editAccount(status, accountNumber);
+      return response(res, 200, account);
+    } catch (error) {
+      if (error.name === 'account_null') {
+        return responseErr(res, 404, 'Invalid account number, no matches found');
       }
+      return responseErr(res, 500, 'Internal server error');
     }
   }
 
+  /**
+   * @static deleteAccount
+   * @param { Object } req
+   * @param { Object } res
+   * @returns response object
+   * @description handles requests for deleting a bank account
+   * @memberof AccountController
+   */
   static async deleteAccount(req, res) {
     const { accountNumber } = req.params;
-    const { userType, isAdmin } = req.user;
-    if (userType === 'client') {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(user), you need to be an admin',
-      });
-    } else if (isAdmin === false) {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(staff), you need to be an admin',
-      });
-    } else {
-      try {
-        await accountModel.deleteAccount(accountNumber);
-        res.status(200).json({
-          status: 200,
-          message: 'Account successfuly deleted',
-        });
-      } catch (error) {
-        if (error.name === 'account_null') {
-          res.status(404).json({ status: 404, error: 'Invalid account number, no matches found' });
-        } else {
-          res.status(500).json({ status: 500, error: 'Internal server error' });
-        }
+    try {
+      await AccountModel.deleteAccount(accountNumber);
+      return responseShort(res, 200, 'Account successfuly deleted');
+    } catch (error) {
+      if (error.name === 'account_null') {
+        return responseErr(res, 404, 'Invalid account number, no matches found');
       }
+      return responseErr(res, 500, 'Internal server error');
     }
   }
 }

@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 class Helpers {
   /**
@@ -19,7 +22,7 @@ class Helpers {
    * @returns { String } token
    */
   static generateToken(payload) {
-    return jwt.sign(payload, 'secret', { expiresIn: '2w' });
+    return jwt.sign(payload, process.env.SECRET, { expiresIn: '2w' });
   }
 
   /**
@@ -41,7 +44,7 @@ class Helpers {
    * @memberof Helper
    */
   static decodeToken(token) {
-    return jwt.verify(token, 'secret');
+    return jwt.verify(token, process.env.SECRET);
   }
 }
 

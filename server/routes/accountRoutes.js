@@ -7,9 +7,10 @@ import Auth from '../middlewares/authentication/auth';
 const router = express.Router();
 
 const { checkCreateAcount, checkEditAccount, checkDeleteAccount } = accountValidations;
+const { verifyToken, verifyAdmin } = Auth;
 
-router.post('/', checkCreateAcount, validateResult, Auth.verifyToken, accountController.createAccount);
-router.patch('/:accountNumber', checkEditAccount, validateResult, Auth.verifyToken, accountController.editAccount);
-router.delete('/:accountNumber', checkDeleteAccount, validateResult, Auth.verifyToken, accountController.deleteAccount);
+router.post('/', checkCreateAcount, validateResult, verifyToken, accountController.createAccount);
+router.patch('/:accountNumber', checkEditAccount, validateResult, verifyToken, verifyAdmin, accountController.editAccount);
+router.delete('/:accountNumber', checkDeleteAccount, validateResult, verifyToken, verifyAdmin, accountController.deleteAccount);
 
 export default router;

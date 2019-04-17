@@ -1,83 +1,87 @@
-import transactionModel from '../models/transactionModel';
+import TransactionModel from '../models/transactionModel';
+import ResponseMsg from '../utils/responseMsg';
+
+const { response, responseErr } = ResponseMsg;
 
 class TransactionController {
+  /**
+   * @static debit account
+   * @param { Object } req
+   * @param { Object } res
+   * @returns response object
+   * @description handles request for debiting of a bank account by a cashier
+   * @memberof TransactionController
+   */
   static async debitAccount(req, res) {
     const { amount } = req.body;
     const { accountNumber } = req.params;
-    const { userType, userId } = req.user;
+    const { userId } = req.user;
     const transactionType = 'debit';
-    if (userType === 'client') {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(user), you need to be an admin',
-      });
-      return;
-    }
     try {
-      const transaction = await transactionModel
+      const transaction = await TransactionModel
         .transactions(amount, accountNumber, userId, transactionType);
       const { newBalance, id } = transaction;
-      res.status(200).json({
-        status: 200,
-        data: {
-          transactionId: id,
-          accountNumber: Number(accountNumber),
-          amount,
-          cashier: userId,
-          transactionType,
-          accountBalance: newBalance,
-        },
+      return response(res, 200, {
+        transactionId: id,
+        accountNumber: Number(accountNumber),
+        amount,
+        cashier: userId,
+        transactionType,
+        accountBalance: newBalance,
       });
     } catch (error) {
       if (error.name === 'insufficient_funds') {
-        res.status(400).json({ status: 400, error: 'Insufficient funds' });
-      } else if (error.name === 'account_null') {
-        res.status(404).json({ status: 404, error: 'this account number doesn\'t exist' });
-      } else if (error.name === 'account_draft') {
-        res.status(400).json({ status: 400, error: 'Transaction failed, this account is not yet active (draft)' });
-      } else if (error.name === 'account_dormant') {
-        res.status(400).json({ status: 400, error: 'Transaction failed, this account is dormant' });
-      } else {
-        res.status(500).json({ status: 500, error: 'Internal server error' });
+        return responseErr(res, 400, 'Insufficient funds');
       }
+      if (error.name === 'account_null') {
+        return responseErr(res, 404, 'this account number doesn\'t exist');
+      }
+      if (error.name === 'account_draft') {
+        return responseErr(res, 400, 'Transaction failed, this account is not yet active (draft)');
+      }
+      if (error.name === 'account_dormant') {
+        return responseErr(res, 400, 'Transaction failed, this account is dormant');
+      }
+      return responseErr(res, 500, 'Internal server error');
     }
   }
 
+  /**
+   * @static debit account
+   * @param { Object } req
+   * @param { Object } res
+   * @returns response object
+   * @description handles request for crediting of a bank account by a cashier
+   * @memberof TransactionController
+   */
   static async creditAccount(req, res) {
     const { amount } = req.body;
     const { accountNumber } = req.params;
-    const { userType, userId } = req.user;
+    const { userId } = req.user;
     const transactionType = 'credit';
-    if (userType === 'client') {
-      res.status(401).json({
-        status: 401, error: 'unauthorized access(user), you need to be an admin',
-      });
-      return;
-    }
     try {
-      const transaction = await transactionModel
+      const transaction = await TransactionModel
         .transactions(amount, accountNumber, userId, transactionType);
       const { newBalance, id } = transaction;
-      res.status(200).json({
-        status: 200,
-        data: {
-          transactionId: id,
-          accountNumber: Number(accountNumber),
-          amount,
-          cashier: userId,
-          transactionType,
-          accountBalance: newBalance,
-        },
+      return response(res, 200, {
+        transactionId: id,
+        accountNumber: Number(accountNumber),
+        amount,
+        cashier: userId,
+        transactionType,
+        accountBalance: newBalance,
       });
     } catch (error) {
       if (error.name === 'account_null') {
-        res.status(404).json({ status: 404, error: 'this account number doesn\'t exist' });
-      } else if (error.name === 'account_draft') {
-        res.status(400).json({ status: 400, error: 'Transaction failed, this account is not yet active (draft)' });
-      } else if (error.name === 'account_dormant') {
-        res.status(400).json({ status: 400, error: 'Transaction failed, this account is dormant' });
-      } else {
-        res.status(500).json({ status: 500, error: 'Internal server error' });
+        return responseErr(res, 404, 'this account number doesn\'t exist');
       }
+      if (error.name === 'account_draft') {
+        return responseErr(res, 400, 'Transaction failed, this account is not yet active (draft)');
+      }
+      if (error.name === 'account_dormant') {
+        return responseErr(res, 400, 'Transaction failed, this account is dormant');
+      }
+      return responseErr(res, 500, 'Internal server error');
     }
   }
 }
