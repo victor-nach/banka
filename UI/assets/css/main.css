@@ -555,16 +555,18 @@ button.btn1:hover {
 
 */
 :root {
-    --border: 1px solid rgba(255,255,255,.2);  /* border color */
-    --dsh-bck-clr: #293145f8;  /* dashboard background color #293145 */
-    /* --dsh-bck-clr: rgba(0,0,0,.5);  dashboard background color #293145 */
-    --dsh-bck-clr-2: #384466bb;  /* dashboard background color #293145 */
+    /* --border: 1px solid rgba(255,255,255,.2);  border color */
+    --border: 1px solid rgba(0,0,0,.2);  /* border color */
+    --dsh-bck-clr: rgba(255,255,255, 1);  /* dashboard background light theme  */
+    /* --dsh-bck-clr: #293145f8;  dashboard background dark theme #293145 */
+    --dsh-bck-clr-2: rgba(0,0,0, .03);  /* dashboard background color #293145 */
     /* --dsh-bck-clr-2: rgba(0,0,0,.5);  dashboard background color #293145 */
-    --lgt-clr-2: #b3b9c521; /* light text color 2 */
-    --lgt-clr-3: #b3b9c5; /* light text color 3 */
-    --lgt-clr-4: #7f8899; /* light text color 4 */
-    --alt-clr-1: rgb(197, 102, 47); /* alternate text color 1 */
-    --alt-clr-2: rgba(197, 102, 47, 0.4); /* alternate text color 1 */
+    --txt-clr-4: #12131421; /* light text color 2 */
+    --txt-clr-2: #31363f; /* light text color 3 */
+    --txt-clr-3: #23262c; /* light text color 4 */
+    /* --txt-clr-1: rgb(197, 102, 47); alternate text color 1 */
+    --txt-clr-1: rgb(81, 86, 99); /* alternate text color 1 */
+    --alt-clr-1: rgba(197, 102, 47, .9); /* alternate text color 1 */
     --alt-clr-3: rgb(33, 241, 33); /* alternate text color 3 -green*/
     --alt-clr-4: rgb(240, 82, 82); /* alternate text color 4 red */
     --toggle-width: 768px;
@@ -594,7 +596,7 @@ button.btn1:hover {
     height: 100%;
     border-right: var(--border);
     transition: all .3s;
-    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+    box-shadow: var(--alt-clr-1) 1px 1px 5px;
     overflow: hidden;
     transform: max-width 1s;
 }
@@ -627,13 +629,13 @@ button.btn1:hover {
 }
 .toggle-close i {
     font-size: 40px;
-    color: var(--alt-clr-1)
+    color: var(--txt-clr-1)
 }
 .toggle-close i:hover {
-    text-shadow: var(--lgt-clr-3) 1px 1px 5px;
+    text-shadow: var(--txt-clr-2) 1px 1px 5px;
 }
 .profile-photo:hover {
-    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+    box-shadow: var(--alt-clr-1) 1px 1px 5px;
 }
 .profile-photo {
     height: 100px;
@@ -646,13 +648,13 @@ button.btn1:hover {
 }
 .profile-photo:hover {
     height: 105px;
-    box-shadow: var(--alt-clr-1) 1px 1px 10px;
+    box-shadow: var(--txt-clr-1) 1px 1px 10px;
 }
 .photo-outer {
     height: 90px;
     width: 90px;
     border: var(--border);
-    border: 1px solid var(--alt-clr-1);
+    border: 1px solid var(--txt-clr-1);
     border-radius: 50%;
     display: flex;
     justify-content: center;
@@ -662,7 +664,7 @@ button.btn1:hover {
 .photo-inner {
     height: 80px;
     width: 80px;
-    border: 1px solid var(--alt-clr-2);
+    border: 1px solid var(--alt-clr-1);
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -671,10 +673,10 @@ button.btn1:hover {
     width: 100px;
 }
 .profile-name p {
-    color: var(--lgt-clr-3)
+    color: var(--txt-clr-2)
 }
 .profile-name p span {
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     font-weight: 400;
     font-size: 13px;
 }
@@ -686,12 +688,12 @@ button.btn1:hover {
 }
 .link-title {
     font-size: 13px;
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     font-weight: 400;
     padding-bottom: 7px; 
 }
 .nav-links li a {
-    color: var(--lgt-clr-3);
+    color: var(--txt-clr-2);
     padding: 8px 0 2px 0;
     display: block;
     position: relative;
@@ -752,7 +754,8 @@ button.btn1:hover {
     position: relative;
 }
 .dashboard-header h3 {
-    text-shadow: var(--alt-clr-1) 1px 1px;
+    text-shadow: var(--txt-clr-3) 1px 1px;
+    color: var(--txt-clr-1)
 }
 .dashboard-header .nav-controls {
     position: absolute;
@@ -776,7 +779,7 @@ button.btn1:hover {
     padding-left: 5px; 
 }
 .nav-controls p:hover {
-    text-shadow: var(--lgt-clr-3) 1px 1px 1px;
+    text-shadow: var(--txt-clr-2) 1px 1px 1px;
 }
 .nav-controls i.fa-bars {
     font-size: 25px;
@@ -801,16 +804,16 @@ button.btn1:hover {
 }
 .bi {
     display: inline;
-    color: var(--lgt-clr-4);
+    color: var(--txt-clr-3);
 }
 .bi span{
-    color: var(--lgt-clr-3);
+    color: var(--txt-clr-2);
 }
 .bi + .bi::before {
     content: "/";
     display: inline-block;
     padding: 0 8px;
-    color: var(--lgt-clr-4);
+    color: var(--txt-clr-3);
 }
 .inner-body {
     grid-area: inner-body;
@@ -823,6 +826,7 @@ button.btn1:hover {
 .dashboard-footer {
     grid-area: footer;
     border-top: var(--border);
+    color: var(--txt-clr-2);
 }
 @media (max-width: 768px) {
     .main-body {
@@ -926,10 +930,11 @@ button.btn1:hover {
 }
 .current-balance p {
     font-size: 30px;
-    color: var(--alt-clr-1)
+    color: var(--txt-clr-1)
 }
 .current-balance span{
     font-size: 11px;
+    color: var(--txt-clr-1)
 }
 .current-balance span i{
     color: var(--alt-clr-3);
@@ -963,11 +968,11 @@ button.btn1:hover {
 }
 .account-details p {
     font-size: 13px;
-    color: var(--lgt-clr-3);
+    color: var(--txt-clr-2);
     padding: 2px 0;
 }
 .account-details p span{
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     font-weight: bolder;
     letter-spacing: 1.5px;
     padding-left: 5px;
@@ -1003,7 +1008,7 @@ button.btn1:hover {
     
 }
 .create-new a:hover {
-    box-shadow: var(--alt-clr-2) 1px 1px 5px;
+    box-shadow: var(--alt-clr-1) 1px 1px 5px;
     width: 62%;
     height: 62%;
 }
@@ -1050,24 +1055,25 @@ button.btn1:hover {
     display: none;
 }
 .trans-table > div {
-    border-bottom: 1px solid var(--lgt-clr-2);
+    border-bottom: 1px solid var(--txt-clr-4);
+    color: var(--txt-clr-2);
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .trans-table .hdng {
-    border-bottom: 1px solid var(--alt-clr-1);
-    color: var(--alt-clr-1);
+    border-bottom: 1px solid var(--txt-clr-1);
+    color: var(--txt-clr-1);
     font-weight: 600;
 }
 .trans-table .btm-row {
     border-bottom: none;
 }
-.credit {
+.trans-table > div.credit {
     color: var(--alt-clr-3);
 }
-.debit {
+.trans-table > div.debit {
     color: var(--alt-clr-4);
 }
 @media (max-width: 768px) {
@@ -1101,6 +1107,7 @@ button.btn1:hover {
 }
 .panel-title h4 {
     font-size: 13px;
+    color: var(--txt-clr-2)
 }
 .panel-outer {
     height: calc(100% - 30px);
@@ -1111,6 +1118,7 @@ button.btn1:hover {
     height: 100%;
     width: 100%;
     background: var(--dsh-bck-clr-2);
+    box-shadow: rgba(0,0,0,.3) 1px 1px 1px 1px;
     border-radius: 10px;
     display: flex;
     position: relative;
@@ -1118,9 +1126,9 @@ button.btn1:hover {
 }
 .panel-heading h5{
     font-size: 13px;
-    color: var(--lgt-clr-3);
+    color: var(--txt-clr-2);
     font-weight: 400;
-    /* color: var(--alt-clr-1) */
+    /* color: var(--txt-clr-1) */
 }
 /*
 ================================================
@@ -1138,8 +1146,27 @@ button.btn1:hover {
 .new-account .form {
     padding: 50px;
     border-radius: 10px;
-    border: 1px solid #003471;
+    /* border: 1px solid #003471; */
     width: 100%;
+    color: var(--txt-clr-1);
+    background: inherit;
+}
+.new-account .front-page input {
+    color: inherit;
+}
+.new-account .front-page input:valid + label {
+    color: inherit;
+}
+.new-account .front-page input:focus + label {
+    color: inherit;
+    text-shadow: 2px 2px 50px rgba(0,0,0,1);
+    background: rgba(255,255,255,.9);
+    box-shadow: rgba(255,255,255,.9) 1px 1px 5px 5px;
+
+}
+.new-account .front-page input:valid + label {
+    transform: scale(.8) translate(-10px, -35px);
+    color: inherit;
 }
 .new-account > div {
     width: 60%;
@@ -1179,16 +1206,16 @@ button.btn1:hover {
     margin: 20px 0;
 }
 .profile-details > p {
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     justify-self: start;
 }
 .profile-details > p:nth-child(even) {
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     justify-self: start;
     margin-left: 10px;
 }
 .profile-details > p:nth-child(odd) {
-    color: var(--lgt-clr-3);
+    color: var(--txt-clr-2);
     justify-self: end;
 }
 /*
@@ -1227,7 +1254,7 @@ button.btn1:hover {
 ================================================
 */
 .go-back h4 {
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     margin-top: 10px;
     transition: all .3s;
 }
@@ -1251,19 +1278,19 @@ button.btn1:hover {
     margin-bottom: 20px;
 }
 .recent-trans-title p{
-    color: var(--alt-clr-1);
+    color: var(--txt-clr-1);
     font-weight: bolder;
     font-size: 20px;
     margin: 15px 0 10px 0;
-    border-bottom: 1px solid var(--alt-clr-1);
+    border-bottom: 1px solid var(--txt-clr-1);
 }
 .recent-trans > p {
-    border-bottom: 1px solid var(--lgt-clr-2);
+    border-bottom: 1px solid var(--txt-clr-4);
 }
 .recent-trans > p:nth-child(1),
 .recent-trans > p:nth-child(2),
 .recent-trans > p:nth-child(3) {
-    border-bottom: 1px solid var(--alt-clr-1);
+    border-bottom: 1px solid var(--txt-clr-1);
 }
 /*
 ================================================
@@ -1271,7 +1298,7 @@ button.btn1:hover {
 ================================================
 */
 .trans-type {
-    margin: 20px 0 15px 0;
+    /* margin: 20px 0 15px 0; */
 }
 /*
 ================================================
@@ -1282,11 +1309,11 @@ button.btn1:hover {
     display: flex;
     justify-content: center;
  }
-.all-b-acc .panel-outer{
+/* .all-b-acc .panel-outer{
     display: grid;
     grid-gap: 10px;
     grid-template-columns: auto;
-}
+} */
 @media (min-width: 1024px) and (max-width: 1300px) {
     .all-b-acc.user .panel-outer{
         grid-template-columns: auto auto;
