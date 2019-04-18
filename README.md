@@ -8,9 +8,12 @@ Banka is a light-weight core banking application that powers banking operations 
 
 ### Locally
 Clone project
+
 Install dependencies by running npm install
-Check .env.sample file for environmental variables required and obtain them and add to a .env file
-Start server on port 5000 by running npm run start:dev
+
+run npm run build to build the project and then run npm start to start the server
+
+For development start server on port 5000 by running npm run start:dev
 
 ### Online
 Project API is hosted online at https://victor-banka.herokuapp.com/
@@ -21,4 +24,19 @@ Project API is hosted online at https://victor-banka.herokuapp.com/
 The pivotal tracker board for the project can be found here - https://www.pivotaltracker.com/n/projects/2320958
 
 ### UI
-The front end for this project is hosted on ghpages and can be found here - https://victor-nach.github.io/banka/api/v1
+The front end for this project is hosted on ghpages and can be found here - https://victor-nach.github.io/banka/UI
+
+### FEATURES
+> Users can sign up
+
+> Users can login
+
+> Users can create a bank account
+
+> Staffs (cashier) can debit a user's bank account
+
+> Staffs (cashier) can credit user's bank account
+
+> Admin/staff can activate or deactivate a bank account
+
+> Admin/staff can delete a user's profile account
