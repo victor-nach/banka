@@ -6,11 +6,12 @@
   "scripts": {
     "start": "node ./build/app.js",
     "start:dev": "nodemon --exec babel-node server/app.js",
-    "build": "npm run clean && mkdir build && babel -d ./build ./server",
+    "build": "rm -rf build && mkdir build && babel -d ./build ./server && export NODE_ENV='production' && node build/models/db/migration.js ",
     "test": "nyc --reporter=text mocha server/test --require @babel/register --timeout 10000 --exit || true",
     "coverage": "nyc report --reporter=text-lcov | coveralls ",
     "lint": "./node_modules/.bin/eslint ./server",
-    "lint:fix": "./node_modules/.bin/eslint ./server --fix || true"
+    "lint:fix": "./node_modules/.bin/eslint ./server --fix || true",
+    "migration:test": "export NODE_ENV=test && babel-node server/models/db/migration.js"
   },
   "repository": {
     "type": "git",
@@ -48,6 +49,7 @@
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^7.10.0"
   }
 }
