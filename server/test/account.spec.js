@@ -339,8 +339,7 @@ describe('DELETE /accounts/<account-number>', () => {
     it('should return 200 and delete a bank account', (done) => {
       chai
         .request(app)
-        // .delete(`${endPoint}accounts/${userAccountNumber}`)
-        .delete(`${endPoint}accounts/1234567801`)
+        .delete(`${endPoint}accounts/${userAccountNumber}`)
         .set('x-access-token', adminToken)
         .end((err, res) => {
           expect(res).to.have.status(200);
