@@ -39,7 +39,6 @@ const test = async () => {
   `;
 
   await db.query(text + seeders);
-  // await db.query(seeders);
 };
 
 test();

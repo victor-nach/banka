@@ -1,4 +1,9 @@
 import userdb from './data/userDb';
+import db from './db';
+import queries from './db/queries';
+import helper from '../utils/helper';
+
+const { insertUser } = queries;
 
 class User {
   /**
@@ -11,24 +16,14 @@ class User {
    * @returns { Object } the created user details
    * @memberof User
    */
-  static signup(firstName, lastName, email, hashedPassword) {
-    if (userdb.find(element => element.email === email)) {
-      const error = new Error();
-      error.name = 'email_conflict';
+  static async signup(firstName, lastName, email, hashedPassword) {
+    try {
+      const values = [email, firstName, lastName, hashedPassword];
+      const { rows } = await db.query(insertUser, values);
+      return helper.camelCased(rows[0]);
+    } catch (error) {
       throw error;
     }
-    const id = userdb.length;
-    const newUser = {
-      id,
-      email,
-      firstName,
-      lastName,
-      hashedPassword,
-      type: 'client',
-      isAdmin: false,
-    };
-    userdb.push(newUser);
-    return newUser;
   }
 
   /**

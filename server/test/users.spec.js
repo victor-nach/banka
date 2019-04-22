@@ -279,7 +279,7 @@ describe('POST /auth/signin', () => {
 
     it('should return 403 if password is incorrect', (done) => {
       const user = {
-        email: 'adama@gmail.com',
+        email: 'cecewilliams@gmail.com',
         password: 'tellmemore',
       };
       assertError('signin', 403, user, done, 'password');
