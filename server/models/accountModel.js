@@ -1,10 +1,10 @@
-import accountDb from './data/accountDb';
 import db from './db';
 import queries from './db/queries';
 import helper from '../utils/helper';
 
 const {
-  getAllAccounts, getSingleAccount, insertAccount, getUserById, updateAccountStatus,
+  getAllAccounts, getSingleAccount, insertAccount,
+  getUserById, updateAccountStatus, deleteSingleAccount,
 } = queries;
 
 class Account {
@@ -47,8 +47,8 @@ class Account {
    */
   static async editAccount(status, accountNumber) {
     let values = [accountNumber];
-    const result = await db.query(getSingleAccount, values);
-    if (!result.rows[0]) {
+    const { rows } = await db.query(getSingleAccount, values);
+    if (!rows[0]) {
       const error = new Error();
       error.name = 'account_null';
       throw error;
@@ -68,14 +68,16 @@ class Account {
    * @returns {}
    * @memberof User
    */
-  static deleteAccount(accountNumber) {
-    const account = accountDb.find(element => element.accountNumber === Number(accountNumber));
-    if (!account) {
+  static async deleteAccount(accountNumber) {
+    let values = [accountNumber];
+    const { rows } = await db.query(getSingleAccount, values);
+    if (!rows[0]) {
       const error = new Error();
       error.name = 'account_null';
       throw error;
     }
-    accountDb.splice(account.id - 1, 1);
+    values = [accountNumber];
+    await db.query(deleteSingleAccount, values);
   }
 }
 
