@@ -1,9 +1,8 @@
-import userdb from './data/userDb';
 import db from './db';
 import queries from './db/queries';
 import helper from '../utils/helper';
 
-const { insertUser } = queries;
+const { insertUser, getSingleUser } = queries;
 
 class User {
   /**
@@ -36,14 +35,19 @@ class User {
    * @returns { Object } the created user details
    * @memberof User
    */
-  static signin(email) {
-    const user = userdb.find(element => element.email === email);
-    if (user === undefined) {
-      const error = new Error();
-      error.name = 'email_null';
+  static async signin(email) {
+    try {
+      const values = [email];
+      const { rows } = await db.query(getSingleUser, values);
+      if (!rows[0]) {
+        const error = new Error();
+        error.name = 'email_null';
+        throw error;
+      }
+      return helper.camelCased(rows[0]);
+    } catch (error) {
       throw error;
     }
-    return user;
   }
 }
 

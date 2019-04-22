@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import helper from '../../utils/helper';
 
 dotenv.config();
 let seedersQuery;
@@ -6,23 +7,23 @@ let seedersQuery;
 if (process.env.NODE_ENV === 'production') {
   seedersQuery = `
 INSERT INTO users ( email, first_name, last_name, hashed_password, type,  is_admin)
-VALUES ('admin@gmail.com', 'admin', 'admin', 'password', 'staff', true ),
-       ('staff@gmail.com', 'staff', 'staff', 'password', 'staff', false),
-       ('user@gmail.com', 'user', 'user', 'password', 'client', false);
+VALUES ('admin@gmail.com', 'admin', 'admin', '${helper.hashPassword('password')}', 'staff', true ),
+       ('staff@gmail.com', 'staff', 'staff', '${helper.hashPassword('password')}', 'staff', false),
+       ('user@gmail.com', 'user', 'user', '${helper.hashPassword('password')}', 'client', false);
 `;
 }
 if (process.env.NODE_ENV === 'test') {
   seedersQuery = `
     INSERT INTO users ( email, first_name, last_name, hashed_password, type,  is_admin)
-    VALUES ('chrisewu@gmail.com', 'chris', 'ewu', 'password', 'staff', true );
+    VALUES ('chrisewu@gmail.com', 'chris', 'ewu', '${helper.hashPassword('chrisewu')}', 'staff', true );
     
     INSERT INTO users ( email, first_name, last_name, hashed_password, type)
-    VALUES ('arjenofukwu@gmail.com', 'arjen', 'ofukwu', 'password', 'staff');
+    VALUES ('arjenofukwu@gmail.com', 'arjen', 'ofukwu', '${helper.hashPassword('flyingdutch')}', 'staff');
         
     INSERT INTO users ( email, first_name, last_name, hashed_password)
-    VALUES ('nyemakamesut@gmail.com', 'nyemaka', 'mesut', 'password'),
-           ('cecewilliams@gmail.com', 'cece', 'williams', 'password'),
-           ('johndoe@gmail.com', 'john', 'doe', 'password');
+    VALUES ('mesutnyemaka@gmail.com', 'nyemaka', 'mesut', '${helper.hashPassword('wenger')}'),
+           ('cecewilliams@gmail.com', 'cece', 'williams', '${helper.hashPassword('tennis')}'),
+           ('johndoe@gmail.com', 'john', 'doe', '${helper.hashPassword('jonjon')}');
         
     INSERT INTO accounts (account_number, owner, type, status, balance)
     VALUES (1234567801, 3, 'savings', 'draft', 123121.00),
