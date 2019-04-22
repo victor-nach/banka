@@ -1,5 +1,9 @@
-import userDb from './data/userDb';
 import accountDb from './data/accountDb';
+import db from './db';
+import queries from './db/queries';
+import helper from '../utils/helper';
+
+const { getAllAccounts, insertAccount, getUserById } = queries;
 
 class Account {
   /**
@@ -11,25 +15,20 @@ class Account {
    * @returns { Object } the created account details
    * @memberof User
    */
-  static createAccount(userId, type, openingBalance) {
-    const user = userDb.find(element => element.id === userId);
-    const id = accountDb.length + 1;
-    const accountNumber = id + 1234567800;
-    const newAccount = {
-      id,
-      accountNumber,
-      createdOn: new Date(),
-      owner: user.id,
-      type,
-      status: 'active',
-      balance: openingBalance,
-    };
-    accountDb.push(newAccount);
+  static async createAccount(userId, type, openingBalance) {
+    let values = [userId];
+    const { rows } = await db.query(getUserById, values);
+    const { firstName, lastName, email } = helper.camelCased(rows[0]);
+    const result = await db.query(getAllAccounts);
+    // get the value of the account number of the account in the array, then add 1
+    const accountNumber = Number(result.rows[result.rows.length - 1].account_number) + 1;
+    values = [accountNumber, userId, type, 'draft', openingBalance];
+    await db.query(insertAccount, values);
     return {
       accountNumber,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      email: user.email,
+      firstName,
+      lastName,
+      email,
       type,
       openingBalance,
     };

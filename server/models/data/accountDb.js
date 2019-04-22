@@ -29,6 +29,16 @@ const accounts = [
     status: 'active',
     balance: 510000.00,
   },
+  {
+    id: 3,
+    accountNumber: 1234567804,
+    createdOn: new Date(),
+    owner: 4,
+    type: 'current',
+    cashier: 2,
+    status: 'active',
+    balance: 510000.00,
+  },
 ];
 
 export default accounts;

@@ -37,6 +37,7 @@ const test = async () => {
     new_balance NUMERIC(200, 2) NOT NULL
   );
   `;
+
   await db.query(text + seeders);
 };
 
