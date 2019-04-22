@@ -84,8 +84,8 @@ before('get staff, user token and user account number', (done) => {
 
 const assertError = (errorCode, amount, done, keyString, token, type) => chai
   .request(app)
-  // .post(`${endPoint}transactions/${userAccountNumber}/${type}`)
-  .post(`${endPoint}transactions/1234567804/${type}`)
+  .post(`${endPoint}transactions/${userAccountNumber}/${type}`)
+  // .post(`${endPoint}transactions/1234567804/${type}`)
   .set('x-access-token', token)
   .send(amount)
   .end((err, res) => {
@@ -124,8 +124,8 @@ describe('POST /transactions/<accout-number>/debit', () => {
       };
       chai
         .request(app)
-        // .post(`${endPoint}transactions/${userAccountNumber}/debit`)
-        .post(`${endPoint}transactions/1234567804/debit`)
+        .post(`${endPoint}transactions/${userAccountNumber}/debit`)
+        // .post(`${endPoint}transactions/1234567804/debit`)
         .set('x-access-token', staffToken)
         .send(amount)
         .end((err, res) => {
@@ -214,7 +214,7 @@ describe('POST /transactions/<accout-number>/debit', () => {
     });
 
     it('should return 400 if account is dormant', (done) => {
-      assertErrorParams(400, 12000, 1234567802, done, 'dormant', staffToken, 'debit');
+      assertErrorParams(400, 12000, 1234567803, done, 'dormant', staffToken, 'debit');
     });
 
 
@@ -255,8 +255,8 @@ describe('POST /transactions/<accout-number>/credit', () => {
       };
       chai
         .request(app)
-        // .post(`${endPoint}transactions/${userAccountNumber}/credit`)
-        .post(`${endPoint}transactions/1234567804/credit`)
+        .post(`${endPoint}transactions/${userAccountNumber}/credit`)
+        // .post(`${endPoint}transactions/1234567804/credit`)
         .set('x-access-token', staffToken)
         .send(amount)
         .end((err, res) => {
@@ -338,7 +338,7 @@ describe('POST /transactions/<accout-number>/credit', () => {
     });
 
     it('should return 400 if account is dormant', (done) => {
-      assertErrorParams(400, 12000, 1234567802, done, 'dormant', staffToken, 'credit');
+      assertErrorParams(400, 12000, 1234567803, done, 'dormant', staffToken, 'credit');
     });
 
 

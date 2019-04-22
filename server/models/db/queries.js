@@ -10,4 +10,8 @@ export default {
   getAllAccounts: 'SELECT * FROM accounts',
   deleteSingleAccount: 'DELETE FROM accounts WHERE account_number = $1',
   updateAccountStatus: 'UPDATE accounts set status = $1 where account_number = $2 returning *',
+  updateAccountBalance: 'UPDATE accounts set balance = $1 where account_number = $2 returning *',
+
+  // Transactions
+  insertTransaction: 'INSERT INTO transactions (type, account_number, cashier_id, old_balance, new_balance) VALUES($1, $2, $3, $4, $5) RETURNING *',
 };
