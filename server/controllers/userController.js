@@ -18,7 +18,7 @@ class UserController {
         token, id: user.id, firstName, lastName, email,
       });
     } catch (error) {
-      if (error.name === 'email_conflict') {
+      if (error.constraint === 'users_email_key') {
         return responseErr(res, 409, 'Kindly use another email, this email address has already been used');
       }
       return responseErr(res, 500, 'Internal server error');

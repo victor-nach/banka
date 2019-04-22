@@ -46,6 +46,22 @@ class Helpers {
   static decodeToken(token) {
     return jwt.verify(token, process.env.SECRET);
   }
+
+  /**
+   * @static camelCased
+   * @param { Object } object
+   * @description converts keys in an object from snake_case to camelCase
+   * @returns a new object
+   * @memberof Helpers
+   */
+  static camelCased(object) {
+    const newObject = {};
+    Object.entries(object).forEach((entry) => {
+      const newKey = entry[0].replace(/(_\w)/g, match => match[1].toUpperCase());
+      newObject[newKey] = entry[1];
+    });
+    return newObject;
+  }
 }
 
 export default Helpers;

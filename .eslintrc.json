@@ -30,6 +30,14 @@
             "rules": {
                 "class-methods-use-this": 0
             }
+        },
+        {
+            "files": [
+                "*helper.js"
+            ],
+            "rules": {
+                "prefer-destructuring": 0
+            }
         }
     ],
     "rules": {
