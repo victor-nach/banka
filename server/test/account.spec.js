@@ -231,8 +231,7 @@ describe('PATCH /accounts/<account-number>', () => {
       const status = { status: 'active' };
       chai
         .request(app)
-        // change back to generated account number
-        .patch(`${endPoint}accounts/1234567801`)
+        .patch(`${endPoint}accounts/${userAccountNumber}`)
         .set('x-access-token', adminToken)
         .send(status)
         .end((err, res) => {

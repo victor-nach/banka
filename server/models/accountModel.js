@@ -3,7 +3,9 @@ import db from './db';
 import queries from './db/queries';
 import helper from '../utils/helper';
 
-const { getAllAccounts, insertAccount, getUserById } = queries;
+const {
+  getAllAccounts, getSingleAccount, insertAccount, getUserById, updateAccountStatus,
+} = queries;
 
 class Account {
   /**
@@ -43,16 +45,18 @@ class Account {
    * @returns { Object } details from the updated account
    * @memberof User
    */
-  static editAccount(status, accountNumber) {
-    const account = accountDb.find(element => element.accountNumber === Number(accountNumber));
-    if (!account) {
+  static async editAccount(status, accountNumber) {
+    let values = [accountNumber];
+    const result = await db.query(getSingleAccount, values);
+    if (!result.rows[0]) {
       const error = new Error();
       error.name = 'account_null';
       throw error;
     }
-    account.status = status;
+    values = [status, accountNumber];
+    await db.query(updateAccountStatus, values);
     return {
-      accountNumber: account.accountNumber,
+      accountNumber: Number(accountNumber),
       status,
     };
   }

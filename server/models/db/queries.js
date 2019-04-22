@@ -9,4 +9,5 @@ export default {
   getSingleAccount: 'SELECT * FROM accounts WHERE account_number = $1',
   getAllAccounts: 'SELECT * FROM accounts',
   deleteSingleAccount: 'DELETE FROM accounts WHERE account_number = $1',
+  updateAccountStatus: 'UPDATE accounts set status = $1 where account_number = $2 returning *',
 };
