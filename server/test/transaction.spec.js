@@ -84,7 +84,8 @@ before('get staff, user token and user account number', (done) => {
 
 const assertError = (errorCode, amount, done, keyString, token, type) => chai
   .request(app)
-  .post(`${endPoint}transactions/${userAccountNumber}/${type}`)
+  // .post(`${endPoint}transactions/${userAccountNumber}/${type}`)
+  .post(`${endPoint}transactions/1234567804/${type}`)
   .set('x-access-token', token)
   .send(amount)
   .end((err, res) => {
@@ -123,7 +124,8 @@ describe('POST /transactions/<accout-number>/debit', () => {
       };
       chai
         .request(app)
-        .post(`${endPoint}transactions/${userAccountNumber}/debit`)
+        // .post(`${endPoint}transactions/${userAccountNumber}/debit`)
+        .post(`${endPoint}transactions/1234567804/debit`)
         .set('x-access-token', staffToken)
         .send(amount)
         .end((err, res) => {
@@ -253,7 +255,8 @@ describe('POST /transactions/<accout-number>/credit', () => {
       };
       chai
         .request(app)
-        .post(`${endPoint}transactions/${userAccountNumber}/credit`)
+        // .post(`${endPoint}transactions/${userAccountNumber}/credit`)
+        .post(`${endPoint}transactions/1234567804/credit`)
         .set('x-access-token', staffToken)
         .send(amount)
         .end((err, res) => {

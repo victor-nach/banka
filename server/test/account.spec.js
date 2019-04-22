@@ -231,7 +231,8 @@ describe('PATCH /accounts/<account-number>', () => {
       const status = { status: 'active' };
       chai
         .request(app)
-        .patch(`${endPoint}accounts/${userAccountNumber}`)
+        // change back to generated account number
+        .patch(`${endPoint}accounts/1234567801`)
         .set('x-access-token', adminToken)
         .send(status)
         .end((err, res) => {
@@ -339,7 +340,8 @@ describe('DELETE /accounts/<account-number>', () => {
     it('should return 200 and delete a bank account', (done) => {
       chai
         .request(app)
-        .delete(`${endPoint}accounts/${userAccountNumber}`)
+        // .delete(`${endPoint}accounts/${userAccountNumber}`)
+        .delete(`${endPoint}accounts/1234567801`)
         .set('x-access-token', adminToken)
         .end((err, res) => {
           expect(res).to.have.status(200);
