@@ -1,5 +1,8 @@
-import transactionDb from './data/transactionDb';
-import accountDb from './data/accountDb';
+import db from './db';
+import queries from './db/queries';
+import helper from '../utils/helper';
+
+const { getSingleAccount, updateAccountBalance, insertTransaction } = queries;
 
 class Account {
   /**
@@ -12,18 +15,15 @@ class Account {
    * @returns { Object } the response object to be returned by controller
    * @memberof User
    */
-  static transactions(amount, accountNumber, userId, type) {
-    const account = accountDb.find(element => element.accountNumber === Number(accountNumber));
-    if (!account) {
+  static async transactions(amount, accountNumber, userId, type) {
+    let values = [accountNumber];
+    const { rows } = await db.query(getSingleAccount, values);
+    if (!rows[0]) {
       const error = new Error();
       error.name = 'account_null';
       throw error;
     }
-    if (Number(amount) >= Number(account.balance)) {
-      const error = new Error();
-      error.name = 'insufficient_funds';
-      throw error;
-    }
+    const account = helper.camelCased(rows[0]);
     if (account.status === 'draft') {
       const error = new Error();
       error.name = 'account_draft';
@@ -34,22 +34,18 @@ class Account {
       error.name = 'account_dormant';
       throw error;
     }
+    if (type === 'debit' && Number(amount) >= Number(account.balance)) {
+      const error = new Error();
+      error.name = 'insufficient_funds';
+      throw error;
+    }
     const oldBalance = account.balance;
-    let newBalance = type === 'debit' ? Number(oldBalance) - Number(amount) : Number(oldBalance) + Number(amount);
-    newBalance = parseFloat(newBalance).toFixed(2);
-    account.balance = Number(newBalance);
-    const transaction = {
-      id: transactionDb.length + 1,
-      createdOn: new Date(),
-      type,
-      accountNumber: Number(accountNumber),
-      cashier: userId,
-      amount,
-      oldBalance,
-      newBalance,
-    };
-    transactionDb.push(transaction);
-    return transaction;
+    const newBalance = type === 'debit' ? Number(oldBalance) - Number(amount) : Number(oldBalance) + Number(amount);
+    values = [newBalance, accountNumber];
+    await db.query(updateAccountBalance, values);
+    values = [type, accountNumber, userId, oldBalance, newBalance];
+    const result = await db.query(insertTransaction, values);
+    return helper.camelCased(result.rows[0]);
   }
 }
 
