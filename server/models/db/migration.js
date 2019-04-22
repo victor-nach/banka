@@ -33,6 +33,7 @@ const test = async () => {
     type VARCHAR(6) NOT NULL,
     account_number BIGINT NOT NULL REFERENCES accounts(account_number) ON DELETE CASCADE,
     cashier_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    amount NUMERIC(200, 2) NOT NULL,
     old_balance NUMERIC(200, 2) NOT NULL,
     new_balance NUMERIC(200, 2) NOT NULL
   );

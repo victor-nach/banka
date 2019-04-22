@@ -85,7 +85,6 @@ before('get staff, user token and user account number', (done) => {
 const assertError = (errorCode, amount, done, keyString, token, type) => chai
   .request(app)
   .post(`${endPoint}transactions/${userAccountNumber}/${type}`)
-  // .post(`${endPoint}transactions/1234567804/${type}`)
   .set('x-access-token', token)
   .send(amount)
   .end((err, res) => {
@@ -105,6 +104,21 @@ const assertErrorParams = (errorCode, amount, number, done, keyString, token, ty
   .post(`${endPoint}transactions/${number}/${type}`)
   .set('x-access-token', token)
   .send({ amount })
+  .end((err, res) => {
+    expect(res).to.have.status(errorCode);
+    expect(res.body).to.be.a('object');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(errorCode);
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
+    done();
+  });
+
+const assertErrorGetTrans = (errorCode, userAccountNumber, done, keyString, token) => chai
+  .request(app)
+  .get(`${endPoint}accounts/${userAccountNumber}/transactions`)
+  .set('x-access-token', token)
   .end((err, res) => {
     expect(res).to.have.status(errorCode);
     expect(res.body).to.be.a('object');
@@ -246,7 +260,7 @@ describe('POST /transactions/<accout-number>/debit', () => {
   });
 });
 
-
+// Staffs should be able to credit a bank account
 describe('POST /transactions/<accout-number>/credit', () => {
   describe('Staff can credit bank account', () => {
     it('should return 200 and credit bank account', (done) => {
@@ -380,6 +394,110 @@ describe('POST /transactions/<accout-number>/credit', () => {
     // sinon.stub(transactionModel, 'transactions').throws();
 
       assertErrorParams(500, 12000, userAccountNumber, done, 'server', adminToken, 'credit');
+    });
+  });
+});
+
+// Users should be view all account transactions
+describe('GET accounts/<accout-number>/transactions/', () => {
+  describe('Users can view all account transactions', () => {
+    userAccountNumber = 1234567804;
+    it('should return 200 and all transaction details', (done) => {
+      userAccountNumber = 1234567804;
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/${userAccountNumber}/transactions`)
+        .set('x-access-token', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('amount');
+          // expect(res.body.data[0].amount).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('newBalance');
+          // expect(res.body.data[0].newBalance).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('oldBalance');
+          // expect(res.body.data[0].oldBalance).to.be.a('number');
+          done();
+        });
+    });
+
+    // account number validations
+    it('should return 404 if account number is omitted', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/transactions`)
+        .set('x-access-token', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.be.include('not exist');
+          done();
+        });
+    });
+
+    it('should return 400 if account number is not a number', (done) => {
+      assertErrorGetTrans(400, '12345678aa', done, 'valid number', userToken);
+    });
+
+    it('should return 400 if account number is not up to 10 digits', (done) => {
+      assertErrorGetTrans(400, 123456789, done, 'less than 10', userToken);
+    });
+
+    it('should return 400 if account number is more than 10 digits', (done) => {
+      assertErrorGetTrans(400, 12345678912, done, 'maximum of 10', userToken);
+    });
+
+    it('should return 404 if account number doesn\'t match any accounts', (done) => {
+      assertErrorGetTrans(404, 1234567891, done, 'doesn\'t exist', adminToken);
+    });
+
+    it('should return 400 if account is in draft phase', (done) => {
+      assertErrorGetTrans(400, 1234567801, done, 'draft', adminToken);
+    });
+
+    it('should return 403 if account doesn\'t belong to user', (done) => {
+      assertErrorGetTrans(403, 1234567802, done, 'unauthorized access (client)', userToken);
+    });
+
+    // token errors
+    it('should return 400 if authentication token is missing', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/${userAccountNumber}/transactions`)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('missing');
+          done();
+        });
+    });
+
+    it('should return 400 if authentication token is invalid', (done) => {
+      assertErrorGetTrans(400, userAccountNumber, done, 'invalid', invalidToken);
+    });
+
+    it('should return 500 for a server error getting all transactions', (done) => {
+      // tell the user model function for creating an account to throw an error regardless
+      sinon.stub(transactionModel, 'allTransactions').throws();
+
+      assertErrorGetTrans(500, userAccountNumber, done, 'server', userToken);
     });
   });
 });

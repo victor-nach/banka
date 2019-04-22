@@ -18,9 +18,17 @@ checkNumber(checkDebitAccount, 'amount', 'accountNumber');
 checkMinLength(checkDebitAccount, 10, 'accountNumber');
 checkMaxLength(checkDebitAccount, 10, 'accountNumber');
 
+// Validate get all transactions
+const checkGetAllTrans = [];
+checkEmpty(checkGetAllTrans, 'accountNumber');
+checkNumber(checkGetAllTrans, 'accountNumber');
+checkMinLength(checkGetAllTrans, 10, 'accountNumber');
+checkMaxLength(checkGetAllTrans, 10, 'accountNumber');
+
 const transactionValidations = {
   checkDebitAccount,
   checkcreditAccount,
+  checkGetAllTrans,
 };
 
 export default transactionValidations;
