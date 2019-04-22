@@ -84,6 +84,26 @@ class TransactionController {
       return responseErr(res, 500, 'Internal server error');
     }
   }
+
+  static async getTransactions(req, res) {
+    const { accountNumber } = req.params;
+    const { userId, isAdmin, userType } = req.user;
+    try {
+      const transaction = await TransactionModel.allTransactions(userId, accountNumber, isAdmin);
+      return response(res, 200, transaction);
+    } catch (error) {
+      if (error.name === 'unauthorized_access') {
+        return responseErr(res, 403, `unauthorized access (${userType}), you need to be an admin to view other user's transactions`);
+      }
+      if (error.name === 'account_null') {
+        return responseErr(res, 404, 'this account number doesn\'t exist');
+      }
+      if (error.name === 'account_draft') {
+        return responseErr(res, 400, 'No transactions. This account is not yet active (draft)');
+      }
+      return responseErr(res, 500, 'Internal server error');
+    }
+  }
 }
 
 export default TransactionController;
