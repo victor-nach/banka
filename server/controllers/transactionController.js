@@ -1,7 +1,7 @@
 import TransactionModel from '../models/transactionModel';
 import ResponseMsg from '../utils/responseMsg';
 
-const { response, responseErr } = ResponseMsg;
+const { response, responseErr, responseShort } = ResponseMsg;
 
 class TransactionController {
   /**
@@ -109,6 +109,9 @@ class TransactionController {
       if (error.name === 'account_draft') {
         return responseErr(res, 400, 'No transactions. This account is not yet active (draft)');
       }
+      if (error.name === 'transaction_null') {
+        return responseShort(res, 200, 'No transactions yet for this account');
+      }
       return responseErr(res, 500, 'Internal server error');
     }
   }
@@ -134,7 +137,6 @@ class TransactionController {
       if (error.name === 'trans_null') {
         return responseErr(res, 404, 'No transaction found for the provided transaction id');
       }
-      console.log(error);
       return responseErr(res, 500, 'Internal server error');
     }
   }

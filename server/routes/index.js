@@ -7,6 +7,7 @@ const router = express.Router();
 
 router.use('/auth', userRoutes);
 router.use('/accounts', accountRoutes);
+router.use('/user', accountRoutes);
 router.use('/transactions', transactionRoutes);
 
 router.get('/', (req, res) => {

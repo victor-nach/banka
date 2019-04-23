@@ -79,6 +79,11 @@ class Account {
       throw error;
     }
     const { rows } = await db.query(getAllTransactions, values);
+    if (!rows[0]) {
+      const error = new Error();
+      error.name = 'transaction_null';
+      throw error;
+    }
     const transactions = rows.map(element => helper.camelCased(element));
     return transactions;
   }
