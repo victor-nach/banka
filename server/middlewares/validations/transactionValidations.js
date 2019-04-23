@@ -25,9 +25,16 @@ checkNumber(checkGetAllTrans, 'accountNumber');
 checkMinLength(checkGetAllTrans, 10, 'accountNumber');
 checkMaxLength(checkGetAllTrans, 10, 'accountNumber');
 
+// Validate get all transactions
+const checkGetSingleTrans = [];
+checkEmpty(checkGetSingleTrans, 'transactionId');
+checkNumber(checkGetSingleTrans, 'transactionId');
+
+
 const transactionValidations = {
   checkDebitAccount,
   checkcreditAccount,
+  checkGetSingleTrans,
   checkGetAllTrans,
 };
 

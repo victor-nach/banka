@@ -15,4 +15,5 @@ export default {
   // Transactions
   insertTransaction: 'INSERT INTO transactions (type, account_number, cashier_id, amount, old_balance, new_balance) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;',
   getAllTransactions: 'SELECT * FROM transactions WHERE account_number = $1;',
+  getSingleTransaction: 'SELECT * FROM transactions WHERE id = $1;',
 };
