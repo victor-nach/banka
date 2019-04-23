@@ -3,7 +3,8 @@ import queries from './db/queries';
 import helper from '../utils/helper';
 
 const {
-  getSingleAccount, updateAccountBalance, insertTransaction, getAllTransactions,
+  getSingleAccount, updateAccountBalance, getSingleTransaction,
+  insertTransaction, getAllTransactions,
 } = queries;
 
 class Account {
@@ -62,7 +63,6 @@ class Account {
   static async allTransactions(userId, accountNumber, isAdmin) {
     const values = [accountNumber];
     const result = await db.query(getSingleAccount, values);
-    // console.log(result.rows[0]);
     if (!result.rows[0]) {
       const error = new Error();
       error.name = 'account_null';
@@ -81,6 +81,35 @@ class Account {
     const { rows } = await db.query(getAllTransactions, values);
     const transactions = rows.map(element => helper.camelCased(element));
     return transactions;
+  }
+
+  /**
+   * @static singleTransactions
+   * @param { number } transactionId
+   * @param { number } userId
+   * @param { boolean } isAdmin
+   * @returns a single transaction object
+   * @description queries the database to get a single transactions for a given transaction id
+   * @memberof Account
+   */
+  static async singleTransactions(transactionId, userId, isAdmin) {
+    let values = [transactionId];
+    const { rows } = await db.query(getSingleTransaction, values);
+    if (!rows[0]) {
+      const error = new Error();
+      error.name = 'trans_null';
+      throw error;
+    }
+    const transaction = helper.camelCased(rows[0]);
+    values = [transaction.accountNumber];
+    const result = await db.query(getSingleAccount, values);
+    const account = helper.camelCased(result.rows[0]);
+    if (Number(account.owner) !== Number(userId) && isAdmin !== true) {
+      const error = new Error();
+      error.name = 'unauthorized_access';
+      throw error;
+    }
+    return transaction;
   }
 }
 

@@ -15,6 +15,7 @@ let userToken;
 let staffToken;
 let adminToken;
 let userAccountNumber;
+const transactionId = 2;
 const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidHlwZSI6ImNsaWVudCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE1NTQ5NDg0NzZ9.LRxxMH6TWXP_JaiaXYHyrOR_ApRDUlnfCJIwds4LC_';
 
 
@@ -118,6 +119,21 @@ const assertErrorParams = (errorCode, amount, number, done, keyString, token, ty
 const assertErrorGetTrans = (errorCode, userAccountNumber, done, keyString, token) => chai
   .request(app)
   .get(`${endPoint}accounts/${userAccountNumber}/transactions`)
+  .set('x-access-token', token)
+  .end((err, res) => {
+    expect(res).to.have.status(errorCode);
+    expect(res.body).to.be.a('object');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(errorCode);
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
+    done();
+  });
+
+const assertErrorSingleTrans = (errorCode, transactionId, done, keyString, token) => chai
+  .request(app)
+  .get(`${endPoint}transactions/${transactionId}`)
   .set('x-access-token', token)
   .end((err, res) => {
     expect(res).to.have.status(errorCode);
@@ -469,8 +485,8 @@ describe('GET accounts/<accout-number>/transactions/', () => {
       assertErrorGetTrans(400, 1234567801, done, 'draft', adminToken);
     });
 
-    it('should return 403 if account doesn\'t belong to user', (done) => {
-      assertErrorGetTrans(403, 1234567802, done, 'unauthorized access (client)', userToken);
+    it('should return 401 if account doesn\'t belong to user', (done) => {
+      assertErrorGetTrans(401, 1234567802, done, 'unauthorized access (client)', userToken);
     });
 
     // token errors
@@ -498,6 +514,98 @@ describe('GET accounts/<accout-number>/transactions/', () => {
       sinon.stub(transactionModel, 'allTransactions').throws();
 
       assertErrorGetTrans(500, userAccountNumber, done, 'server', userToken);
+    });
+  });
+});
+
+// Users should be view single account transactions
+describe('GET transactions/<transaction-id>', () => {
+  describe('Users can view a specific account transactions', () => {
+    it('should return 200 and all transaction details', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}transactions/${transactionId}`)
+        .set('x-access-token', userToken)
+        .end((err, res) => {
+          console.log(res.body);
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('object');
+          expect(res.body.data).to.have.property('id');
+          expect(res.body.data.id).to.be.a('number');
+          expect(res.body.data).to.have.property('createdOn');
+          expect(res.body.data.createdOn).to.be.a('string');
+          expect(res.body.data).to.have.property('type');
+          expect(res.body.data.type).to.be.a('string');
+          expect(res.body.data).to.have.property('amount');
+          // expect(res.body.data.amount).to.be.a('number');
+          expect(res.body.data).to.have.property('newBalance');
+          // expect(res.body.data.newBalance).to.be.a('number');
+          expect(res.body.data).to.have.property('oldBalance');
+          // expect(res.body.data.oldBalance).to.be.a('number');
+          done();
+        });
+    });
+
+    // transaction id validations
+    it('should return 404 if transaction id is omitted', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}transactions`)
+        .set('x-access-token', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.be.include('not exist');
+          done();
+        });
+    });
+
+    it('should return 400 if transaction id is not a number', (done) => {
+      assertErrorSingleTrans(400, '1a', done, 'valid number', userToken);
+    });
+
+    it('should return 404 if transactionId doesn\'t match any transactions', (done) => {
+      assertErrorSingleTrans(404, 91, done, 'No transaction found', adminToken);
+    });
+
+
+    it('should return 401 if account doesn\'t belong to user', (done) => {
+      assertErrorSingleTrans(401, 1, done, 'unauthorized access', userToken);
+    });
+
+    // token errors
+    it('should return 400 if authentication token is missing', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}transactions/${transactionId}`)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('missing');
+          done();
+        });
+    });
+
+    it('should return 400 if authentication token is invalid', (done) => {
+      assertErrorSingleTrans(400, transactionId, done, 'invalid', invalidToken);
+    });
+
+    it('should return 500 for a server error getting single transactions', (done) => {
+      // tell the user model function to throw an error regardless
+      sinon.stub(transactionModel, 'singleTransactions').throws();
+
+      assertErrorSingleTrans(500, transactionId, done, 'server', userToken);
     });
   });
 });
