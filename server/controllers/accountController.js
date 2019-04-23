@@ -67,6 +67,26 @@ class AccountController {
       return responseErr(res, 500, 'Internal server error');
     }
   }
+
+  static async getAllUserAccounts(req, res) {
+    const { userId, isAdmin, userType } = req.user;
+    const { email } = req.params;
+    try {
+      const accounts = await AccountModel.allUserAccounts(email, userId, isAdmin);
+      return response(res, 200, accounts);
+    } catch (error) {
+      if (error.name === 'email_null') {
+        return responseErr(res, 404, 'no users found for this email address');
+      }
+      if (error.name === 'unauthorized_access') {
+        return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's accounts`);
+      }
+      if (error.name === 'account_null') {
+        return responseShort(res, 200, 'The user doesn\'t have any accounts');
+      }
+      return responseErr(res, 500, 'Internal Server Error');
+    }
+  }
 }
 
 export default AccountController;

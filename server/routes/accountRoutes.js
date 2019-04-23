@@ -8,7 +8,10 @@ import Auth from '../middlewares/authentication/auth';
 
 const router = express.Router();
 
-const { checkCreateAcount, checkEditAccount, checkDeleteAccount } = accountValidations;
+const {
+  checkCreateAcount, checkEditAccount,
+  checkDeleteAccount, checkAllUserAccounts,
+} = accountValidations;
 const { checkGetAllTrans } = transactionValidations;
 const { verifyToken, verifyAdmin } = Auth;
 
@@ -16,5 +19,7 @@ router.post('/', checkCreateAcount, validateResult, verifyToken, accountControll
 router.patch('/:accountNumber', checkEditAccount, validateResult, verifyToken, verifyAdmin, accountController.editAccount);
 router.delete('/:accountNumber', checkDeleteAccount, validateResult, verifyToken, verifyAdmin, accountController.deleteAccount);
 router.get('/:accountNumber/transactions', checkGetAllTrans, validateResult, verifyToken, transactionController.getTransactions);
+router.get('/:email/accounts', checkAllUserAccounts, validateResult, verifyToken, accountController.getAllUserAccounts);
+
 
 export default router;

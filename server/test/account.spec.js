@@ -80,6 +80,21 @@ const assertErrorParamsD = (errorCode, number, done, keyString, token) => chai
     done();
   });
 
+const assertErrorAllAccounts = (errorCode, email, done, keyString, token) => chai
+  .request(app)
+  .get(`${endPoint}user/${email}/accounts`)
+  .set('x-access-token', token)
+  .end((err, res) => {
+    expect(res).to.have.status(errorCode);
+    expect(res.body).to.be.a('object');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(errorCode);
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
+    done();
+  });
+
 before('get user token', (done) => {
   chai.request(app)
     .post(`${endPoint}/auth/signin`)
@@ -420,6 +435,120 @@ describe('DELETE /accounts/<account-number>', () => {
       sinon.stub(accountModel, 'deleteAccount').throws();
 
       assertErrorParamsD(500, userAccountNumber, done, 'server', adminToken);
+    });
+  });
+});
+
+// GET /user/<email-address>/accounts Admin can view all user's bank account
+describe('GET /user/<email-address>/accounts', () => {
+  describe('Admin can view all user\'s bank account', () => {
+    it('Should return 200 and all user\'s bank accounts', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}user/${userData.email}/accounts`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('accountNumber');
+          // expect(res.body.data[0].accountNumber).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('owner');
+          // expect(res.body.data[0].owner).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('status');
+          expect(res.body.data[0].status).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('balance');
+          // expect(res.body.data[0].balance).to.be.a('number');
+          done();
+        });
+    });
+
+    // check email validations
+    it('should return 400 if email address is not valid', (done) => {
+      assertErrorAllAccounts(400, 'ada@a', done, 'put in a valid email', adminToken);
+    });
+
+    it('should return 404 if email address is omitted', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}user/accounts`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.be.include('not exist');
+          done();
+        });
+    });
+
+    it('should return 404 if email address doesn\'t match any users', (done) => {
+      assertErrorAllAccounts(404, 'ada@a.com', done, 'no users found', adminToken);
+    });
+
+    it('should return 200 if email address doesn\'t have any bank account', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}user/johndoe@gmail.com/accounts`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
+          done();
+        });
+    });
+
+    // token errors
+    it('should return 400 if authentication token is missing', (done) => {
+      const status = { status: 'dormant' };
+      chai
+        .request(app)
+        .get(`${endPoint}user/${userData.email}/accounts`)
+        .send(status)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('missing');
+          done();
+        });
+    });
+
+    it('should return 400 if authentication token is invalid', (done) => {
+      assertErrorAllAccounts(400, userData.email, done, 'invalid', invalidToken);
+    });
+
+    it('should return 401 if user doesn\'t own the account', (done) => {
+      assertErrorAllAccounts(401, 'cecewilliams@gmail.com', done, 'client', userToken);
+    });
+
+    it('should return 401 if staff doesn\'t own the account', (done) => {
+      assertErrorAllAccounts(401, userData.email, done, 'staff', staffToken);
+    });
+
+    it('should return 500 for a server error', (done) => {
+    // tell the user model function for creating an account to throw an error regardless
+      sinon.stub(accountModel, 'allUserAccounts').throws();
+
+      assertErrorAllAccounts(500, userData.email, done, 'Server Error', adminToken);
     });
   });
 });

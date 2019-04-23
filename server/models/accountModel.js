@@ -3,8 +3,8 @@ import queries from './db/queries';
 import helper from '../utils/helper';
 
 const {
-  getAllAccounts, getSingleAccount, insertAccount,
-  getUserById, updateAccountStatus, deleteSingleAccount,
+  getAllAccounts, getSingleAccount, insertAccount, getSingleUser,
+  getUserById, updateAccountStatus, deleteSingleAccount, getAccountByOwner,
 } = queries;
 
 class Account {
@@ -78,6 +78,43 @@ class Account {
     }
     values = [accountNumber];
     await db.query(deleteSingleAccount, values);
+  }
+
+  /**
+   * @static allUserAccounts
+   * @param { String } email
+   * @param { String } userId
+   * @param { String } isAdmin
+   * @returns accounts array
+   * @memberof Account
+   */
+  static async allUserAccounts(email, userId, isAdmin) {
+    let values = [email];
+    // query the user table looking for an email match
+    const user = await db.query(getSingleUser, values);
+    if (!user.rows[0]) {
+      const error = new Error();
+      error.name = 'email_null';
+      throw error;
+    }
+    values = [user.rows[0].id];
+    // check if the user has any accounts
+    // console.log(user.rows[0].id);
+    // console.log(user.rows[0].email);
+    const { rows } = await db.query(getAccountByOwner, values);
+    if (!rows[0]) {
+      const error = new Error();
+      error.name = 'account_null';
+      throw error;
+    }
+    // if user doesn't own the account
+    if (Number(rows[0].owner) !== Number(userId) && isAdmin !== true) {
+      const error = new Error();
+      error.name = 'unauthorized_access';
+      throw error;
+    }
+    const accounts = rows.map(element => helper.camelCased(element));
+    return accounts;
   }
 }
 

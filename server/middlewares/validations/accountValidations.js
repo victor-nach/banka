@@ -1,7 +1,7 @@
 import validatorHelpers from '../../utils/validatorHelpers';
 
 const {
-  checkEmpty, checkAccType, checkAccStatus, checkMinLength, checkMaxLength, checkNumber,
+  checkEmpty, checkAccType, checkAccStatus, checkMinLength, checkMaxLength, checkNumber, checkEmail,
 } = validatorHelpers;
 
 // Validate bank account creation
@@ -26,9 +26,13 @@ checkNumber(checkDeleteAccount, 'accountNumber');
 checkMinLength(checkDeleteAccount, 10, 'accountNumber');
 checkMaxLength(checkDeleteAccount, 10, 'accountNumber');
 
+const checkAllUserAccounts = [];
+checkEmail(checkAllUserAccounts, 'email');
+
 const accountValidations = {
   checkCreateAcount,
   checkEditAccount,
+  checkAllUserAccounts,
   checkDeleteAccount,
 };
 

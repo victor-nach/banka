@@ -419,7 +419,6 @@ describe('GET accounts/<accout-number>/transactions/', () => {
   describe('Users can view all account transactions', () => {
     userAccountNumber = 1234567804;
     it('should return 200 and all transaction details', (done) => {
-      userAccountNumber = 1234567804;
       chai
         .request(app)
         .get(`${endPoint}accounts/${userAccountNumber}/transactions`)
@@ -443,6 +442,22 @@ describe('GET accounts/<accout-number>/transactions/', () => {
           // expect(res.body.data[0].newBalance).to.be.a('number');
           expect(res.body.data[0]).to.have.property('oldBalance');
           // expect(res.body.data[0].oldBalance).to.be.a('number');
+          done();
+        });
+    });
+
+    it('should return 200 and response message if account has no transactions yet', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/1234567803/transactions`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.be.a('string');
           done();
         });
     });
@@ -527,7 +542,6 @@ describe('GET transactions/<transaction-id>', () => {
         .get(`${endPoint}transactions/${transactionId}`)
         .set('x-access-token', userToken)
         .end((err, res) => {
-          console.log(res.body);
           expect(res).to.have.status(200);
           expect(res.body).to.be.a('object');
           expect(res.body).to.have.property('status');
@@ -579,6 +593,10 @@ describe('GET transactions/<transaction-id>', () => {
 
     it('should return 401 if account doesn\'t belong to user', (done) => {
       assertErrorSingleTrans(401, 1, done, 'unauthorized access', userToken);
+    });
+
+    it('should return 401 if account doesn\'t belong to staff', (done) => {
+      assertErrorSingleTrans(401, 1, done, 'unauthorized access', staffToken);
     });
 
     // token errors
