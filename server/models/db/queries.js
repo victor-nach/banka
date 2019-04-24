@@ -12,6 +12,7 @@ export default {
   updateAccountStatus: 'UPDATE accounts set status = $1 where account_number = $2 returning *;',
   updateAccountBalance: 'UPDATE accounts set balance = $1 where account_number = $2 returning *;',
   getAccountByOwner: 'SELECT * FROM accounts WHERE owner = $1;',
+  getAccountByStatus: 'SELECT * FROM accounts WHERE status = $1;',
 
   // Transactions
   insertTransaction: 'INSERT INTO transactions (type, account_number, cashier_id, amount, old_balance, new_balance) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;',

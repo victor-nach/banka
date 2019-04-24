@@ -3,7 +3,7 @@ import queries from './db/queries';
 import helper from '../utils/helper';
 
 const {
-  getAllAccounts, getSingleAccount, insertAccount, getSingleUser,
+  getAllAccounts, getSingleAccount, insertAccount, getSingleUser, getAccountByStatus,
   getUserById, updateAccountStatus, deleteSingleAccount, getAccountByOwner,
 } = queries;
 
@@ -99,8 +99,6 @@ class Account {
     }
     values = [user.rows[0].id];
     // check if the user has any accounts
-    // console.log(user.rows[0].id);
-    // console.log(user.rows[0].email);
     const { rows } = await db.query(getAccountByOwner, values);
     if (!rows[0]) {
       const error = new Error();
@@ -114,6 +112,48 @@ class Account {
       throw error;
     }
     const accounts = rows.map(element => helper.camelCased(element));
+    return accounts;
+  }
+
+  /**
+   * @static allUserAccounts
+   * @param { Number } accountNumber
+   * @param { String } userId
+   * @param { String } isAdmin
+   * @returns accounts array
+   * @memberof Account
+   */
+  static async singleBankAccount(accountNumber, userId, isAdmin) {
+    const values = [accountNumber];
+    const { rows } = await db.query(getSingleAccount, values);
+    if (!rows[0]) {
+      const error = new Error();
+      error.name = 'account_null';
+      throw error;
+    }
+    // if user doesn't own the account
+    if (Number(rows[0].owner) !== Number(userId) && isAdmin !== true) {
+      const error = new Error();
+      error.name = 'unauthorized_access';
+      throw error;
+    }
+    return helper.camelCased(rows[0]);
+  }
+
+  static async allBankAccounts(type) {
+    let result;
+    if (type === 'bank') {
+      result = await db.query(getAllAccounts);
+    } else {
+      const values = [type];
+      result = await db.query(getAccountByStatus, values);
+    }
+    // if (!result.rows[0]) {
+    //   const error = new Error();
+    //   error.name = 'account_null';
+    //   throw error;
+    // }
+    const accounts = result.rows.map(element => helper.camelCased(element));
     return accounts;
   }
 }

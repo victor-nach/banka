@@ -5,10 +5,10 @@ import transactionRoutes from './transactionRoutes';
 
 const router = express.Router();
 
-router.use('/auth', userRoutes);
+
 router.use('/accounts', accountRoutes);
-router.use('/user', accountRoutes);
 router.use('/transactions', transactionRoutes);
+router.use('', userRoutes);
 
 router.get('/', (req, res) => {
   res.status(200).json({
