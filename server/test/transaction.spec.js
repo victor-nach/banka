@@ -462,24 +462,6 @@ describe('GET accounts/<accout-number>/transactions/', () => {
         });
     });
 
-    // account number validations
-    it('should return 404 if account number is omitted', (done) => {
-      chai
-        .request(app)
-        .get(`${endPoint}accounts/transactions`)
-        .set('x-access-token', userToken)
-        .end((err, res) => {
-          expect(res).to.have.status(404);
-          expect(res.body).to.be.a('object');
-          expect(res.body).to.have.property('status');
-          expect(res.body.status).to.be.equal(404);
-          expect(res.body).to.have.property('error');
-          expect(res.body.error).to.be.a('string');
-          expect(res.body.error).to.be.include('not exist');
-          done();
-        });
-    });
-
     it('should return 400 if account number is not a number', (done) => {
       assertErrorGetTrans(400, '12345678aa', done, 'valid number', userToken);
     });

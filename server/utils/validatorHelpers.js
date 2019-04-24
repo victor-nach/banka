@@ -100,7 +100,7 @@ class ValidatorHelpers {
    * @memberof ValidatorHelpers
    */
   static checkAccStatus(path, field) {
-    path.push(check(field).trim().matches(/\bdormant|active\b/).withMessage(`the account ${field} has to be either savings or current`));
+    path.push(check(field).trim().matches(/\bdormant|active|draft\b/).withMessage(`the account ${field} has to be either dormant, active or draft`));
   }
 
   /**

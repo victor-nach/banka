@@ -87,6 +87,41 @@ class AccountController {
       return responseErr(res, 500, 'Internal Server Error');
     }
   }
+
+  static async getSingleAccount(req, res) {
+    const { userId, isAdmin, userType } = req.user;
+    const { accountNumber } = req.params;
+    try {
+      const account = await AccountModel.singleBankAccount(accountNumber, userId, isAdmin);
+      return response(res, 200, account);
+    } catch (error) {
+      if (error.name === 'unauthorized_access') {
+        return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's accounts`);
+      }
+      if (error.name === 'account_null') {
+        return responseErr(res, 404, 'The account number doesn\'t match any accounts');
+      }
+      return responseErr(res, 500, 'Internal Server Error');
+    }
+  }
+
+  static async getAllAccounts(req, res) {
+    let { status } = req.query;
+    if (status !== 'active' && status !== 'draft' && status !== 'dormant' && status !== undefined) {
+      return responseErr(res, 400, 'The account status has to be either dormant, active or draft');
+    }
+    if (status === undefined) status = 'bank';
+    try {
+      // console.log(status);
+      const accounts = await AccountModel.allBankAccounts(status);
+      return response(res, 200, accounts);
+    } catch (error) {
+      // if (error.name === 'account_null') {
+      //   return responseShort(res, 200, `There are no ${status} accounts yet`);
+      // }
+      return responseErr(res, 500, 'Internal Server Error');
+    }
+  }
 }
 
 export default AccountController;

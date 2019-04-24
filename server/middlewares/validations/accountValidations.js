@@ -29,11 +29,22 @@ checkMaxLength(checkDeleteAccount, 10, 'accountNumber');
 const checkAllUserAccounts = [];
 checkEmail(checkAllUserAccounts, 'email');
 
+const checkGetBankAccounts = [];
+// checkAccStatus(checkGetBankAccounts, 'status');
+
+const checkGetSingleAccount = [];
+checkEmpty(checkGetSingleAccount, 'accountNumber');
+checkNumber(checkGetSingleAccount, 'accountNumber');
+checkMinLength(checkGetSingleAccount, 10, 'accountNumber');
+checkMaxLength(checkGetSingleAccount, 10, 'accountNumber');
+
 const accountValidations = {
   checkCreateAcount,
   checkEditAccount,
   checkAllUserAccounts,
   checkDeleteAccount,
+  checkGetBankAccounts,
+  checkGetSingleAccount,
 };
 
 export default accountValidations;

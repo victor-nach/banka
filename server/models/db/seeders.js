@@ -29,7 +29,8 @@ if (process.env.NODE_ENV === 'test') {
     VALUES (1234567801, 3, 'savings', 'draft', 123121.00),
            (1234567802, 4, 'current', 'active', 100000.00),
            (1234567803, 1, 'savings', 'dormant', 18661.113),
-           (1234567804, 3, 'savings', 'active', 5000.00);
+           (1234567804, 3, 'savings', 'active', 5000.00),
+           (1234567805, 3, 'savings', 'active', 5000.00);
 
     INSERT INTO transactions (type, account_number, cashier_id, amount, old_balance, new_balance)
     VALUES ('credit', 1234567802, 2, 100000.00, 20000.00, 120000.00),

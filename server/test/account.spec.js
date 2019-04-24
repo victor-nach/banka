@@ -95,6 +95,21 @@ const assertErrorAllAccounts = (errorCode, email, done, keyString, token) => cha
     done();
   });
 
+const assertErrorAccount = (errorCode, accountNumber, done, keyString, token) => chai
+  .request(app)
+  .get(`${endPoint}accounts/${accountNumber}`)
+  .set('x-access-token', token)
+  .end((err, res) => {
+    expect(res).to.have.status(errorCode);
+    expect(res.body).to.be.a('object');
+    expect(res.body).to.have.property('status');
+    expect(res.body.status).to.be.equal(errorCode);
+    expect(res.body).to.have.property('error');
+    expect(res.body.error).to.be.a('string');
+    expect(res.body.error).to.include(keyString);
+    done();
+  });
+
 before('get user token', (done) => {
   chai.request(app)
     .post(`${endPoint}/auth/signin`)
@@ -242,7 +257,7 @@ describe('POST /accounts', () => {
 // PATCH /acounts/<account-number> Staff can change bank account status
 describe('PATCH /accounts/<account-number>', () => {
   describe('Staff can change bank account status', () => {
-    it('Staff should be able to change bank account status', (done) => {
+    it('Should return 200 and change bank account status', (done) => {
       const status = { status: 'active' };
       chai
         .request(app)
@@ -270,7 +285,7 @@ describe('PATCH /accounts/<account-number>', () => {
     });
 
     it('should return 400 if account type is neither active nor dormant', (done) => {
-      assertErrorParams(400, 'dorm', userAccountNumber, done, 'savings', adminToken);
+      assertErrorParams(400, 'dorm', userAccountNumber, done, 'dormant', adminToken);
     });
 
     // check account opening balance validations
@@ -354,7 +369,8 @@ describe('DELETE /accounts/<account-number>', () => {
     it('should return 200 and delete a bank account', (done) => {
       chai
         .request(app)
-        .delete(`${endPoint}accounts/${userAccountNumber}`)
+        // .delete(`${endPoint}accounts/${userAccountNumber}`)
+        .delete(`${endPoint}accounts/1234567805`)
         .set('x-access-token', adminToken)
         .end((err, res) => {
           expect(res).to.have.status(200);
@@ -550,5 +566,395 @@ describe('GET /user/<email-address>/accounts', () => {
 
       assertErrorAllAccounts(500, userData.email, done, 'Server Error', adminToken);
     });
+  });
+});
+
+// GET /accounts/:account-number Admin can view single user's bank account
+describe('GET /accounts/:account-number', () => {
+  describe('Admin can view all a single bank account', () => {
+    it('Should return 200 and bank account details', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/${userAccountNumber}`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('object');
+          expect(res.body.data).to.have.property('id');
+          expect(res.body.data.id).to.be.a('number');
+          expect(res.body.data).to.have.property('accountNumber');
+          // expect(res.body.data.accountNumber).to.be.a('number');
+          expect(res.body.data).to.have.property('createdOn');
+          expect(res.body.data.createdOn).to.be.a('string');
+          expect(res.body.data).to.have.property('owner');
+          // expect(res.body.data.owner).to.be.a('number');
+          expect(res.body.data).to.have.property('type');
+          expect(res.body.data.type).to.be.a('string');
+          expect(res.body.data).to.have.property('status');
+          expect(res.body.data.status).to.be.a('string');
+          expect(res.body.data).to.have.property('balance');
+          // expect(res.body.data.balance).to.be.a('number');
+          done();
+        });
+    });
+
+    // check email account number validations
+    it('should return 400 if account number is not a number', (done) => {
+      assertErrorAccount(400, '13213dd', done, 'valid number', adminToken);
+    });
+
+    it('should return 400 if account number is not up to 10 digits', (done) => {
+      assertErrorAccount(400, 123456789, done, 'less than 10', adminToken);
+    });
+
+    it('should return 400 if account number is more than 10 digits', (done) => {
+      assertErrorAccount(400, 12345678912, done, 'maximum of 10', adminToken);
+    });
+
+    it('should return 404 if account number doesn\'t match any accounts', (done) => {
+      assertErrorAccount(404, 1234567891, done, 'doesn\'t match any accounts', adminToken);
+    });
+
+    // token errors
+    it('should return 400 if authentication token is missing', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts/${userAccountNumber}`)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('missing');
+          done();
+        });
+    });
+
+    it('should return 400 if authentication token is invalid', (done) => {
+      assertErrorAccount(400, userAccountNumber, done, 'invalid', invalidToken);
+    });
+
+    it('should return 401 if user doesn\'t own the account', (done) => {
+      assertErrorAccount(401, 1234567803, done, 'client', userToken);
+    });
+
+    it('should return 401 if staff doesn\'t own the account', (done) => {
+      assertErrorAccount(401, 1234567803, done, 'staff', staffToken);
+    });
+
+    it('should return 500 for a server error', (done) => {
+    // tell the user model function for creating an account to throw an error regardless
+      sinon.stub(accountModel, 'singleBankAccount').throws();
+
+      assertErrorAccount(500, userAccountNumber, done, 'Server Error', adminToken);
+    });
+  });
+});
+
+// GET /user/<email-address>/accounts Admin can view all user's bank account
+describe('GET /accounts?status=active|dormant|draft', () => {
+  // beforeEach('restore allBankAccounts', (done) => {
+  //   sinon.stub(accountModel, 'allBankAccounts').restore();
+  //   done();
+  // });
+  describe('Admin can view all bank accounts', () => {
+    it('Should return 200 and all bank accounts when no params are passed', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}/accounts`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('accountNumber');
+          // expect(res.body.data[0].accountNumber).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('owner');
+          // expect(res.body.data[0].owner).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('status');
+          expect(res.body.data[0].status).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('balance');
+          // expect(res.body.data[0].balance).to.be.a('number');
+          done();
+        });
+    });
+
+    it('Should return 200 and all draft accounts', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}/accounts?status=draft`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('accountNumber');
+          // expect(res.body.data[0].accountNumber).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('owner');
+          // expect(res.body.data[0].owner).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('status');
+          expect(res.body.data[0].status).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('balance');
+          // expect(res.body.data[0].balance).to.be.a('number');
+          done();
+        });
+    });
+
+    it('Should return 200 and all active accounts', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}/accounts?status=active`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('accountNumber');
+          // expect(res.body.data[0].accountNumber).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('owner');
+          // expect(res.body.data[0].owner).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('status');
+          expect(res.body.data[0].status).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('balance');
+          // expect(res.body.data[0].balance).to.be.a('number');
+          done();
+        });
+    });
+
+    it('Should return 200 and all dormant accounts', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}/accounts?status=dormant`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('array');
+          expect(res.body.data[0]).to.have.property('id');
+          expect(res.body.data[0].id).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('accountNumber');
+          // expect(res.body.data[0].accountNumber).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('createdOn');
+          expect(res.body.data[0].createdOn).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('owner');
+          // expect(res.body.data[0].owner).to.be.a('number');
+          expect(res.body.data[0]).to.have.property('type');
+          expect(res.body.data[0].type).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('status');
+          expect(res.body.data[0].status).to.be.a('string');
+          expect(res.body.data[0]).to.have.property('balance');
+          // expect(res.body.data[0].balance).to.be.a('number');
+          done();
+        });
+    });
+
+    it('should return 400 if account status is invalid', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts?status=walker`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.be.include(' either dormant, active or draft');
+          done();
+        });
+    });
+
+    // token errors
+    it('should return 400 if authentication token is missing', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts`)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('missing');
+          done();
+        });
+    });
+
+    it('should return 400 if authentication token is invalid', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts`)
+        .set('x-access-token', invalidToken)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('invalid');
+          done();
+        });
+    });
+
+    it('should return 401 if user authentication token is provided', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts`)
+        .set('x-access-token', userToken)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('client');
+          done();
+        });
+    });
+
+    it('should return 401 if staff authentication token is provided', (done) => {
+      chai
+        .request(app)
+        .get(`${endPoint}accounts`)
+        .set('x-access-token', staffToken)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('staff');
+          done();
+        });
+    });
+
+    // it('should return 200 if there are no bank accounts', (done) => {
+    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
+    //   chai
+    //     .request(app)
+    //     .get(`${endPoint}accounts`)
+    //     .set('x-access-token', adminToken)
+    //     .end((err, res) => {
+    //       console.log(res.body);
+    //       expect(res).to.have.status(200);
+    //       expect(res.body).to.be.a('object');
+    //       expect(res.body).to.have.property('status');
+    //       expect(res.body.status).to.be.equal(200);
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.message).to.be.a('string');
+    //       done();
+    //     });
+    // });
+
+    // it('should return 200 if there are no draft bank accounts', (done) => {
+    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
+    //   chai
+    //     .request(app)
+    //     .get(`${endPoint}accounts?status=active`)
+    //     .set('x-access-token', adminToken)
+    //     .end((err, res) => {
+    //       expect(res).to.have.status(200);
+    //       expect(res.body).to.be.a('object');
+    //       expect(res.body).to.have.property('status');
+    //       expect(res.body.status).to.be.equal(200);
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.message).to.be.a('string');
+    //       sinon.stub(accountModel, 'allBankAccounts').restore();
+    //       done();
+    //     });
+    // });
+
+    // it('should return 200 if there are no dormant bank accounts', (done) => {
+    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
+    //   chai
+    //     .request(app)
+    //     .get(`${endPoint}accounts?status=dormant`)
+    //     .set('x-access-token', adminToken)
+    //     .end((err, res) => {
+    //       expect(res).to.have.status(200);
+    //       expect(res.body).to.be.a('object');
+    //       expect(res.body).to.have.property('status');
+    //       expect(res.body.status).to.be.equal(200);
+    //       expect(res.body).to.have.property('message');
+    //       expect(res.body.message).to.be.a('string');
+    //       sinon.stub(accountModel, 'allBankAccounts').restore();
+    //       done();
+    //     });
+    // });
+    // describe('stubs', () => {
+    //   beforeEach(() => {
+    //     console.log('remove stubs');
+    //     sinon.stub(accountModel, 'allBankAccounts').restore();
+    //   });
+    //   it('should return 200 if there are no active bank accounts', (done) => {
+    //     sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
+    //     chai
+    //       .request(app)
+    //       .get(`${endPoint}accounts?status=draft`)
+    //       .set('x-access-token', adminToken)
+    //       .end((err, res) => {
+    //         expect(res).to.have.status(200);
+    //         expect(res.body).to.be.a('object');
+    //         expect(res.body).to.have.property('status');
+    //         expect(res.body.status).to.be.equal(200);
+    //         expect(res.body).to.have.property('message');
+    //         expect(res.body.message).to.be.a('string');
+    //         done();
+    //       });
+    //   });
+
+    it('should return 500 for a server error', (done) => {
+      sinon.stub(accountModel, 'allBankAccounts').throws();
+      chai
+        .request(app)
+        .get(`${endPoint}accounts`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(500);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          done();
+        });
+    });
+    // });
   });
 });
