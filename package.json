@@ -46,10 +46,12 @@
     "@babel/polyfill": "^7.4.3",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
     "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "express-validator": "^5.3.1",
     "jsonwebtoken": "^8.5.1",
-    "pg": "^7.10.0"
+    "pg": "^7.10.0",
+    "swagger-ui-express": "^4.0.2"
   }
 }

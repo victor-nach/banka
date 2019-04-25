@@ -10,7 +10,7 @@ const validateResult = (req, res, next) => {
       .json({
         status: 400,
         // return our custom message
-        error: errors.array().map(i => i.msg)[0],
+        error: errors.array().map(i => i.msg),
       });
   }
   // else pass control to the next middleware

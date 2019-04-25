@@ -1,0 +1,718 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Banka is a light-weight core banking application that powers banking operations like account creation, customer deposit and withdrawals. This app is meant to support a single bank, where users can signup and create bank accounts online, but must visit the branch to withdraw or deposit money.",
+      "version": "1.0.0",
+      "title": "Banka",
+      "contact": {
+        "email": "viheanaco@gmail.com"
+      }
+    },
+    "host": "localhost:5000",
+    "basePath": "/api/v1",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "Sign up, Sign in, and view User's bank Accounts"
+      },
+      {
+        "name": "Accounts",
+        "description": "Create, delete update and view bank accounts"
+      },
+      {
+        "name": "Transactions",
+        "description": "Credit, debit and view transactions"
+      }
+    ],
+    "schemes": [
+      "https",
+      "http"
+    ],
+    "paths": {
+      "/auth/signup": {
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "User sign up",
+          "description": "Allows a user to register on the banking platform",
+          "operationId": "signup",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "mesut@gmail.com"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "nyemaka"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "mesut"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "wenger"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "User sign up was successful",
+              "schema": {
+                "$ref": "#/definitions/userResponse"
+            }
+            },
+            "400": {
+              "description": "Error is returned if any of the user's input is invalid",
+              "schema" : {
+                  "$ref": "#/definitions/400ResponseSign"
+              }
+            },
+            "409": {
+              "description": "Error is returned if email has already been used"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/auth/signin": {
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "User sign in",
+          "description": "Allows a user to sign in",
+          "operationId": "signin",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "mesutnyemaka@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "wenger"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User sign in successful",
+              "schema": {
+                "$ref": "#/definitions/userResponse"
+            }
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"              
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/user/:email/accounts": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get all user's bank account",
+          "description": "Returns a list of all bank accounts owned by a specific user by email ",
+          "operationId": "getUserAccounts",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "name": "email",
+              "in": "path",
+              "description": "email of the specific user ",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "succesfully returns all the user's accounts"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "404": {
+              "description": "No matches found for the specified user email address"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/accounts": {
+        "post": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Creates a new bank account",         
+          "operationId": "createAccount",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string"
+                  },
+                  "openingBalance": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Account successfully created"
+            },
+            "400": {
+              "description": "invalid user request input"
+            },
+            "401": {
+                "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        },
+        "get": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Returns all bank accounts",
+          "description": "Returns all bank accounts in the database, also accepts a query for filtering 'draft', 'active', 'dormant'",
+          "operationId": "listAccounts",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "query",
+              "name": "status",
+              "description": "Query for filtering by status, 'draft', 'active', 'dormant'",
+              "required": false,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Found the accounts"
+            },
+            "401": {
+                "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "400": {
+                "description": "Invalid request parameters"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/accounts/:accountNumber": {
+        "get": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Returns the details of a single specific bank account",
+          "description": "Gets account details",
+          "operationId": "retrieveAccount",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "name": "accountNumber",
+              "in": "path",
+              "description": "bank account number",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Account details successfully returned"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "400": {
+                "description": "Invalid request parameters (incorrect account number)"
+            },
+            "404": {
+              "description": "Account not found"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        },
+        "patch": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Updates account status",
+          "description": "Changes the account status to either active or dormant",
+          "operationId": "updateAccount",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {                
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Account status successfully updated"
+            },
+            "400": {
+                "description": "Invalid request parameters (incorrect account number)"
+            },
+            "404": {
+                "description": "Account Number not found"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        },
+        "delete": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Deletes a bank account",
+          "description": "Removes a particular account from the database",
+          "operationId": "deleteAccount",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Account deleted successfully"
+            },
+            "400": {
+                "description": "Invalid request parameters (incorrect account number)"
+            },
+            "404": {
+                "description": "Account Number not found"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/accounts/:accountNumber/transactions": {
+        "get": {
+          "tags": [
+            "Accounts"
+          ],
+          "summary": "Gets account transaction history",
+          "description": "Gets the list of all transactions for a particular account",
+          "operationId": "retrieveAccountTransactionHistory",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "name": "accountNumber",
+              "in": "path",
+              "description": "account number of particular account to return",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Found account transaction history"
+            },
+            "400": {
+                "description": "Invalid request parameters (incorrect account number)"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token, or non-owner of the account)"
+            },
+            "404": {
+                "description": "Account Number not found"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/transactions/:transactionId": {
+        "get": {
+          "tags": [
+            "Transactions"
+          ],
+          "summary": "Gets transaction details",
+          "description": "Gets the details of a particular account transaction by Id",
+          "operationId": "retrieveTransactionDetails",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "name": "transactionId",
+              "in": "path",
+              "description": "transactionId of the transaction to return",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Found transaction"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "400": {
+                "description": "Invalid request parameters (incorrect transaction id type)"
+            },
+            "404": {
+              "description": "Transaction not found"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/transactions/:accountNumber/credit": {
+        "post": {
+          "tags": [
+            "Transactions"
+          ],
+          "summary": "Credit account",
+          "description": "Creates a new transaction by crediting an account",
+          "operationId": "creditAccount",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Account successfully credited"
+            },
+            "400": {
+              "description": "Invalid request parameters"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      },
+      "/transactions/:accountNumber/debit": {
+        "post": {
+          "tags": [
+            "Transactions"
+          ],
+          "summary": "Debit account",
+          "description": "Creates a new transaction by debiting an account",
+          "operationId": "debitAccount",
+          "consumes": [
+            "application/json"
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "header",
+              "name": "x-access-token",
+              "description": "JWT Token Authentication",
+              "required": "true",
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": "true"
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Account successfully debited"
+            },
+            "400": {
+              "description": "Invalid request parameters"
+            },
+            "401": {
+              "description": "Failed authentication, (incorrect, unauthorized or expired token)"
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#definitions/500Response"
+            }
+            }            
+          }
+        }
+      }
+    },
+    "definitions": {
+        "userResponse":{
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "example": 201
+              },
+              "data": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidHlwZSI6ImNsaWVudCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE1NTU5NjE5MjksImV4cCI6MTU1NzE3MTUyOX0.v-msOokoua7VJs13uPB9xNN2ASlDRQkLbgOViTgNDl0"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "example": "mesut"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "example": "nyemaka"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "mesutnyemaka@gmail.com"
+                    }
+                  }
+                }
+              }
+            }
+        },
+        "400ResponseSign":{
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "example": 400
+              },
+              "error": {
+                  "type": "string",
+                  "example": "email address should not contain any white spaces"
+              }
+            }
+        },
+        "500Response":{
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "integer",
+                "example": 500
+              },
+              "error": {
+                  "type": "string",
+                  "example": "Internal server error"
+              }
+            }
+        }
+    }
+  }
