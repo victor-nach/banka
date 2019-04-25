@@ -112,7 +112,7 @@ class ValidatorHelpers {
    */
   static checkNumber(route, ...input) {
     input.forEach((element) => {
-      route.push(check(element).trim().isNumeric().withMessage(`please put in a valid number as ${element} with no signs`));
+      route.push(check(element).trim().isNumeric().withMessage(`please put in a valid number as ${element}`));
     });
   }
 }
