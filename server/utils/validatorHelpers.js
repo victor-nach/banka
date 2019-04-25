@@ -116,3 +116,5 @@ class ValidatorHelpers {
     });
   }
 }
+
+export default ValidatorHelpers;
