@@ -1,5 +1,7 @@
 import helper from '../../utils/helper';
 import ResponseMsg from '../../utils/responseMsg';
+import db from '../../models/db';
+import queries from '../../models/db/queries';
 
 const { responseErr } = ResponseMsg;
 
@@ -59,6 +61,38 @@ class Auth {
   static async verifyAdmin(req, res, next) {
     if (req.user.isAdmin !== true) {
       return responseErr(res, 401, `unauthorized access(${req.user.userType}), you need to be an Admin`);
+    }
+    return next();
+  }
+
+  static async verifyTransactionOwner(req, res, next) {
+    const { userId, isAdmin, userType } = req.user;
+    const { transactionId } = req.params;
+    let values = [transactionId];
+    const { rows } = await db.query(queries.getSingleTransaction, values);
+    if (!rows[0]) {
+      return responseErr(res, 404, 'No transaction found for the provided transaction id');
+    }
+    const transaction = helper.camelCased(rows[0]);
+    values = [transaction.accountNumber];
+    const result = await db.query(queries.getSingleAccount, values);
+    const account = helper.camelCased(result.rows[0]);
+    if (Number(account.owner) !== Number(userId) && isAdmin !== true) {
+      return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's transactions`);
+    }
+    return next();
+  }
+
+  static async verifyAccountOwner(req, res, next) {
+    const { accountNumber } = req.params;
+    const { userId, isAdmin, userType } = req.user;
+    const values = [accountNumber];
+    const result = await db.query(queries.getSingleAccount, values);
+    if (!result.rows[0]) {
+      return responseErr(res, 404, 'this account number doesn\'t exist');
+    }
+    if (Number(result.rows[0].owner) !== Number(userId) && isAdmin !== true) {
+      return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's transactions`);
     }
     return next();
   }
