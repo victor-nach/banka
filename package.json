@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./build/app.js",
     "start:dev": "nodemon --exec babel-node server/app.js",
-    "build": "rm -rf build && mkdir build && babel -d ./build ./server && export NODE_ENV='production' && node build/models/db/migration.js ",
+    "build": "rm -rf build && mkdir build && babel -d ./build ./server && export NODE_ENV='test' && node build/models/db/migration.js ",
     "test": "export NODE_ENV=test && npm run migration:test && nyc --reporter=text mocha server/test --require @babel/register --timeout 10000 --exit || true",
     "coverage": "nyc report --reporter=text-lcov | coveralls ",
     "lint": "./node_modules/.bin/eslint ./server",
