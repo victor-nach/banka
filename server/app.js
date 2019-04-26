@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 import cors from 'cors';
-import swaggerDocument from './swagger.json';
+import swaggerDocument from '../swagger.json';
 import router from './routes';
 
 // setup the express app

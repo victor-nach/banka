@@ -112,7 +112,22 @@ class ValidatorHelpers {
    */
   static checkNumber(route, ...input) {
     input.forEach((element) => {
-      route.push(check(element).trim().isNumeric().withMessage(`please put in a valid number as ${element}`));
+      route.push(check(element).trim().isFloat({ min: 1 })
+        .withMessage(`please put in a valid number as ${element}`));
+    });
+  }
+
+  /**
+   * @static checkSign
+   * @description checks if the value contains any signs
+   * @param { Array } route
+   * @param { String } input the input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkSign(route, ...input) {
+    input.forEach((element) => {
+      route.push(check(element).isNumeric({ no_symbols: true })
+        .withMessage(`The ${element} should be a valid number without any symbols or signs`));
     });
   }
 }

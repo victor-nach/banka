@@ -61,12 +61,12 @@ class TransactionController {
     const transactionType = 'credit';
     try {
       const transaction = await TransactionModel
-        .transactions(amount, accountNumber, userId, transactionType);
+        .transactions(Number(amount), accountNumber, userId, transactionType);
       const { newBalance, id } = transaction;
       return response(res, 200, {
         transactionId: id,
         accountNumber: Number(accountNumber),
-        amount,
+        amount: Number(amount),
         cashier: userId,
         transactionType,
         accountBalance: newBalance,
@@ -95,17 +95,10 @@ class TransactionController {
    */
   static async getTransactions(req, res) {
     const { accountNumber } = req.params;
-    const { userId, isAdmin, userType } = req.user;
     try {
-      const transaction = await TransactionModel.allTransactions(userId, accountNumber, isAdmin);
+      const transaction = await TransactionModel.allTransactions(accountNumber);
       return response(res, 200, transaction);
     } catch (error) {
-      if (error.name === 'unauthorized_access') {
-        return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's transactions`);
-      }
-      if (error.name === 'account_null') {
-        return responseErr(res, 404, 'this account number doesn\'t exist');
-      }
       if (error.name === 'account_draft') {
         return responseErr(res, 400, 'No transactions. This account is not yet active (draft)');
       }
@@ -125,18 +118,11 @@ class TransactionController {
    * @memberof TransactionController
    */
   static async getSingleTransaction(req, res) {
-    const { userId, isAdmin, userType } = req.user;
     const { transactionId } = req.params;
     try {
-      const transaction = await TransactionModel.singleTransactions(transactionId, userId, isAdmin);
+      const transaction = await TransactionModel.singleTransactions(transactionId);
       return response(res, 200, transaction);
     } catch (error) {
-      if (error.name === 'unauthorized_access') {
-        return responseErr(res, 401, `unauthorized access (${userType}), you need to be an admin to view other user's transactions`);
-      }
-      if (error.name === 'trans_null') {
-        return responseErr(res, 404, 'No transaction found for the provided transaction id');
-      }
       return responseErr(res, 500, 'Internal server error');
     }
   }
