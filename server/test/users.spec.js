@@ -10,6 +10,8 @@ chai.use(sinonChai);
 const { expect } = chai;
 
 const endPoint = '/api/v1/auth';
+let userToken;
+let adminToken;
 
 // standard error response
 const assertError = (path, errorCode, user, done, keyString) => chai
@@ -58,6 +60,7 @@ describe('POST /auth/signup', () => {
           expect(res.body.data.lastName).to.be.a('string');
           expect(res.body.data).to.have.property('email');
           expect(res.body.data.email).to.be.a('string');
+          userToken = res.body.data.token;
           done();
         });
     });
@@ -201,18 +204,18 @@ describe('POST /auth/signup', () => {
       assertError('signup', 400, user, done, 'kindly put in');
     });
 
-    it('should return 500 for a server error', (done) => {
-      // tell the user model function for creating a user to throw an error regardless
-      sinon.stub(userModel, 'signup').throws();
+    // it('should return 500 for a server error', (done) => {
+    //   // tell the user model function for creating a user to throw an error regardless
+    //   sinon.stub(userModel, 'signup').throws();
 
-      const user = {
-        firstName: 'adama',
-        lastName: 'traore',
-        email: 'adamoa@gmail.com',
-        password: 'bellerin',
-      };
-      assertError('signup', 500, user, done, 'server');
-    });
+    //   const user = {
+    //     firstName: 'adama',
+    //     lastName: 'traore',
+    //     email: 'adamoa@gmail.com',
+    //     password: 'bellerin',
+    //   };
+    //   assertError('signup', 500, user, done, 'server');
+    // });
   });
 });
 
@@ -242,6 +245,7 @@ describe('POST /auth/signin', () => {
           expect(res.body.data.lastName).to.be.a('string');
           expect(res.body.data).to.have.property('email');
           expect(res.body.data.email).to.be.a('string');
+          adminToken = res.body.data.token;
           done();
         });
     });
@@ -294,6 +298,135 @@ describe('POST /auth/signin', () => {
         password: 'chrisewu',
       };
       assertError('signin', 500, user, done, 'server');
+    });
+  });
+});
+
+describe('POST /auth/signup/admin', () => {
+  describe('Admin staff creation', () => {
+    it('should create a new staff/admin and return 201, and proper response body ', (done) => {
+      const user = {
+        firstName: 'adama',
+        lastName: 'traore',
+        email: 'adamauno@gmail.com',
+        password: 'bellerin',
+        type: 'staff',
+        isAdmin: true,
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/signup/admin`)
+        .set('x-access-token', adminToken)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(201);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(201);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('object');
+          expect(res.body.data).to.have.property('token');
+          expect(res.body.data.token).to.be.a('string');
+          expect(res.body.data).to.have.property('id');
+          expect(res.body.data.id).to.be.a('number');
+          expect(res.body.data.id % 1).to.be.equal(0);
+          expect(res.body.data).to.have.property('firstName');
+          expect(res.body.data.firstName).to.be.a('string');
+          expect(res.body.data).to.have.property('lastName');
+          expect(res.body.data.lastName).to.be.a('string');
+          expect(res.body.data).to.have.property('email');
+          expect(res.body.data.email).to.be.a('string');
+          done();
+        });
+    });
+
+    it('should make sure type is either staff or admin ', (done) => {
+      const user = {
+        firstName: 'adama',
+        lastName: 'traore',
+        email: 'adama6@gmail.com',
+        password: 'bellerin',
+        type: 'staffu',
+        isAdmin: true,
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/signup/admin`)
+        .set('x-access-token', adminToken)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('type');
+          done();
+        });
+    });
+
+    it('should make sure isAdmin is either true or false ', (done) => {
+      const user = {
+        firstName: 'adama',
+        lastName: 'traore',
+        email: 'adama5@gmail.com',
+        password: 'bellerin',
+        type: 'staff',
+        isAdmin: 'truet',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/signup/admin`)
+        .set('x-access-token', adminToken)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(400);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(400);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('isAdmin');
+          done();
+        });
+    });
+
+    it('should only allow an admin access the route ', (done) => {
+      const user = {
+        firstName: 'adama',
+        lastName: 'traore',
+        email: 'adamaadama@gmail.com',
+        password: 'bellerin',
+        type: 'staff',
+        isAdmin: true,
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/signup/admin`)
+        .set('x-access-token', userToken)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(401);
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(401);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('unauthorized access');
+          done();
+        });
+    });
+
+
+    it('should return 500 for a server error', (done) => {
+      // tell the user model function for creating a user to throw an error regardless
+      sinon.stub(userModel, 'signup').throws();
+
+      const user = {
+        firstName: 'adama',
+        lastName: 'traore',
+        email: 'adamoa@gmail.com',
+        password: 'bellerin',
+      };
+      assertError('signup', 500, user, done, 'server');
     });
   });
 });

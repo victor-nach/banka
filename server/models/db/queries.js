@@ -1,6 +1,6 @@
 export default {
   // Users
-  insertUser: 'INSERT INTO users(email, first_name, last_name, hashed_password) VALUES($1, $2, $3, $4) RETURNING *;',
+  insertUser: 'INSERT INTO users(email, first_name, last_name, hashed_password, type, is_admin) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;',
   getSingleUser: 'SELECT * FROM users WHERE email = $1;',
   getUserById: 'SELECT * FROM users WHERE id = $1;',
 

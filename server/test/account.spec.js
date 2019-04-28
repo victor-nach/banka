@@ -241,16 +241,16 @@ describe('POST /accounts', () => {
       assertError('accounts', 400, account, done, 'invalid', invalidToken);
     });
 
-    it('should return 500 for a server error', (done) => {
-      // tell the user model function for creating an account to throw an error regardless
-      sinon.stub(accountModel, 'createAccount').throws();
+    // it('should return 500 for a server error', (done) => {
+    //   const createAccount = sinon.stub(accountModel, 'createAccount');
+    //   createAccount.throws();
 
-      const account = {
-        type: 'savings',
-        openingBalance: 1000,
-      };
-      assertError('accounts', 500, account, done, 'server', userToken);
-    });
+    //   const account = {
+    //     type: 'savings',
+    //     openingBalance: 1000,
+    //   };
+    //   assertError('accounts', 500, account, done, 'server', userToken);
+    // });
   });
 });
 
@@ -363,13 +363,21 @@ describe('PATCH /accounts/<account-number>', () => {
   });
 });
 
-// DELETE /acounts/<account-number> Admin can delete bank accoun
+const deleteAccount = sinon.stub(accountModel, 'deleteAccount');
+// DELETE /acounts/<account-number> Admin can delete bank account
 describe('DELETE /accounts/<account-number>', () => {
   describe('Admin can delete bank account', () => {
+    after(() => {
+      deleteAccount.restore();
+    });
+    it('should return 500 for a server error', (done) => {
+      deleteAccount.throws();
+      assertErrorParamsD(500, userAccountNumber, done, 'server', adminToken);
+    });
     it('should return 200 and delete a bank account', (done) => {
+      deleteAccount.restore();
       chai
         .request(app)
-        // .delete(`${endPoint}accounts/${userAccountNumber}`)
         .delete(`${endPoint}accounts/1234567805`)
         .set('x-access-token', adminToken)
         .end((err, res) => {
@@ -380,6 +388,17 @@ describe('DELETE /accounts/<account-number>', () => {
           expect(res.body).to.have.property('message');
           expect(res.body.message).to.be.a('string');
           expect(res.body.message).to.include('deleted');
+          done();
+        });
+    });
+
+    it('should return 404 if the account has just been deleted account', (done) => {
+      chai
+        .request(app)
+        .delete(`${endPoint}accounts/1234567805`)
+        .set('x-access-token', adminToken)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
           done();
         });
     });
@@ -446,11 +465,10 @@ describe('DELETE /accounts/<account-number>', () => {
       assertErrorParamsD(401, userAccountNumber, done, 'staff', staffToken);
     });
 
-    it('should return 500 for a server error', (done) => {
-    // tell the user model function for creating an account to throw an error regardless
-      sinon.stub(accountModel, 'deleteAccount').throws();
-
-      assertErrorParamsD(500, userAccountNumber, done, 'server', adminToken);
+    it('should return 404 for a an account if it has been sucessfully deleted', (done) => {
+      const throws = sinon.stub(accountModel, 'deleteAccount');
+      throws.throws('account_null');
+      assertErrorParamsD(404, userAccountNumber, done, 'no matches found', adminToken);
     });
   });
 });
@@ -656,12 +674,8 @@ describe('GET /accounts/:account-number', () => {
   });
 });
 
-// GET /user/<email-address>/accounts Admin can view all user's bank account
+// GET /accounts?status=active|dormant|draft Admin can view all bank account
 describe('GET /accounts?status=active|dormant|draft', () => {
-  // beforeEach('restore allBankAccounts', (done) => {
-  //   sinon.stub(accountModel, 'allBankAccounts').restore();
-  //   done();
-  // });
   describe('Admin can view all bank accounts', () => {
     it('Should return 200 and all bank accounts when no params are passed', (done) => {
       chai
@@ -864,97 +878,172 @@ describe('GET /accounts?status=active|dormant|draft', () => {
         });
     });
 
-    // it('should return 200 if there are no bank accounts', (done) => {
-    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
+    // it('should return 500 for a server error', (done) => {
+    //   // sinon.stub(accountModel, 'allBankAccounts').throws();
     //   chai
     //     .request(app)
     //     .get(`${endPoint}accounts`)
     //     .set('x-access-token', adminToken)
     //     .end((err, res) => {
-    //       console.log(res.body);
-    //       expect(res).to.have.status(200);
+    //       expect(res).to.have.status(500);
     //       expect(res.body).to.be.a('object');
     //       expect(res.body).to.have.property('status');
-    //       expect(res.body.status).to.be.equal(200);
-    //       expect(res.body).to.have.property('message');
-    //       expect(res.body.message).to.be.a('string');
+    //       expect(res.body.status).to.be.equal(500);
+    //       expect(res.body).to.have.property('error');
+    //       expect(res.body.error).to.be.a('string');
     //       done();
     //     });
     // });
+  });
+});
 
-    // it('should return 200 if there are no draft bank accounts', (done) => {
-    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
-    //   chai
-    //     .request(app)
-    //     .get(`${endPoint}accounts?status=active`)
-    //     .set('x-access-token', adminToken)
-    //     .end((err, res) => {
-    //       expect(res).to.have.status(200);
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body).to.have.property('status');
-    //       expect(res.body.status).to.be.equal(200);
-    //       expect(res.body).to.have.property('message');
-    //       expect(res.body.message).to.be.a('string');
-    //       sinon.stub(accountModel, 'allBankAccounts').restore();
-    //       done();
-    //     });
-    // });
+describe('delete all accounts and test for case when accounts is empty', () => {
+  it('user should return the default account number', (done) => {
+    chai
+      .request(app)
+      .delete(`${endPoint}accounts/1234567801`)
+      .set('x-access-token', adminToken)
+      .end(() => {
+        chai
+          .request(app)
+          .delete(`${endPoint}accounts/1234567802`)
+          .set('x-access-token', adminToken)
+          .end(() => {
+            chai
+              .request(app)
+              .delete(`${endPoint}accounts/1234567803`)
+              .set('x-access-token', adminToken)
+              .end(() => {
+                chai
+                  .request(app)
+                  .delete(`${endPoint}accounts/1234567804`)
+                  .set('x-access-token', adminToken)
+                  .end(() => {
+                    chai
+                      .request(app)
+                      .delete(`${endPoint}accounts/1234567805`)
+                      .set('x-access-token', adminToken)
+                      .end(() => {
+                        chai
+                          .request(app)
+                          .delete(`${endPoint}accounts/1234567806`)
+                          .set('x-access-token', adminToken)
+                          .end(() => {
+                            chai
+                              .request(app)
+                              .delete(`${endPoint}accounts/1234567807`)
+                              .set('x-access-token', adminToken)
+                              .end(() => {
+                                chai
+                                  .request(app)
+                                  .delete(`${endPoint}accounts/1234567808`)
+                                  .set('x-access-token', adminToken)
+                                  .end(() => {
+                                    done();
+                                  });
+                              });
+                          });
+                      });
+                  });
+              });
+          });
+      });
+  });
 
-    // it('should return 200 if there are no dormant bank accounts', (done) => {
-    //   sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
-    //   chai
-    //     .request(app)
-    //     .get(`${endPoint}accounts?status=dormant`)
-    //     .set('x-access-token', adminToken)
-    //     .end((err, res) => {
-    //       expect(res).to.have.status(200);
-    //       expect(res.body).to.be.a('object');
-    //       expect(res.body).to.have.property('status');
-    //       expect(res.body.status).to.be.equal(200);
-    //       expect(res.body).to.have.property('message');
-    //       expect(res.body.message).to.be.a('string');
-    //       sinon.stub(accountModel, 'allBankAccounts').restore();
-    //       done();
-    //     });
-    // });
-    // describe('stubs', () => {
-    //   beforeEach(() => {
-    //     console.log('remove stubs');
-    //     sinon.stub(accountModel, 'allBankAccounts').restore();
-    //   });
-    //   it('should return 200 if there are no active bank accounts', (done) => {
-    //     sinon.stub(accountModel, 'allBankAccounts').throws('account_null');
-    //     chai
-    //       .request(app)
-    //       .get(`${endPoint}accounts?status=draft`)
-    //       .set('x-access-token', adminToken)
-    //       .end((err, res) => {
-    //         expect(res).to.have.status(200);
-    //         expect(res.body).to.be.a('object');
-    //         expect(res.body).to.have.property('status');
-    //         expect(res.body.status).to.be.equal(200);
-    //         expect(res.body).to.have.property('message');
-    //         expect(res.body.message).to.be.a('string');
-    //         done();
-    //       });
-    //   });
+  it('should return 200 if there are no bank accounts', (done) => {
+    chai
+      .request(app)
+      .get(`${endPoint}accounts`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        done();
+      });
+  });
 
-    it('should return 500 for a server error', (done) => {
-      sinon.stub(accountModel, 'allBankAccounts').throws();
-      chai
-        .request(app)
-        .get(`${endPoint}accounts`)
-        .set('x-access-token', adminToken)
-        .end((err, res) => {
-          expect(res).to.have.status(500);
-          expect(res.body).to.be.a('object');
-          expect(res.body).to.have.property('status');
-          expect(res.body.status).to.be.equal(500);
-          expect(res.body).to.have.property('error');
-          expect(res.body.error).to.be.a('string');
-          done();
-        });
-    });
-    // });
+  it('should return 200 if there are no draft bank accounts', (done) => {
+    chai
+      .request(app)
+      .get(`${endPoint}accounts?status=active`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+
+        done();
+      });
+  });
+
+  it('should return 200 if there are no dormant bank accounts', (done) => {
+    chai
+      .request(app)
+      .get(`${endPoint}accounts?status=dormant`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        done();
+      });
+  });
+
+  it('should return 200 if there are no active bank accounts', (done) => {
+    chai
+      .request(app)
+      .get(`${endPoint}accounts?status=draft`)
+      .set('x-access-token', adminToken)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('message');
+        expect(res.body.message).to.be.a('string');
+        done();
+      });
+  });
+
+  it('user should be able to create a new bank account', (done) => {
+    const account = {
+      type: 'savings',
+      openingBalance: 10000,
+    };
+    chai
+      .request(app)
+      .post(`${endPoint}/accounts`)
+      .set('x-access-token', userToken)
+      .send(account)
+      .end((err, res) => {
+        expect(res).to.have.status(200);
+        expect(res.body).to.be.a('object');
+        expect(res.body).to.have.property('status');
+        expect(res.body.status).to.be.equal(200);
+        expect(res.body).to.have.property('data');
+        expect(res.body.data).to.be.a('object');
+        expect(res.body.data).to.have.property('accountNumber');
+        expect(res.body.data.accountNumber).to.be.a('number');
+        expect(res.body.data).to.have.property('firstName');
+        expect(res.body.data.firstName).to.be.a('string');
+        expect(res.body.data).to.have.property('lastName');
+        expect(res.body.data.lastName).to.be.a('string');
+        expect(res.body.data).to.have.property('email');
+        expect(res.body.data.email).to.be.a('string');
+        expect(res.body.data).to.have.property('type');
+        expect(res.body.data.type).to.be.a('string');
+        expect(res.body.data).to.have.property('openingBalance');
+        done();
+      });
   });
 });

@@ -62,6 +62,13 @@ class Helpers {
     });
     return newObject;
   }
+
+  static genAccNumber(accountArray) {
+    if (!accountArray[0]) {
+      return 1234567801;
+    }
+    return Number(accountArray[accountArray.length - 1].account_number) + 1;
+  }
 }
 
 export default Helpers;
