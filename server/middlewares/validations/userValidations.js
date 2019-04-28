@@ -1,7 +1,8 @@
 import validatorHelpers from '../../utils/validatorHelpers';
 
 const {
-  checkEmpty, checkAlphabets, checkMinLength, checkMaxLength, checkEmail, noWhiteSpace,
+  checkEmpty, checkAlphabets, checkMinLength, checkIsAdmin,
+  checkMaxLength, checkEmail, noWhiteSpace, checkUserType,
 } = validatorHelpers;
 
 // Validate sign up
@@ -14,6 +15,10 @@ checkMaxLength(checkSignUp, 20, 'firstName', 'lastName', 'password');
 noWhiteSpace(checkSignUp, 'firstName', 'lastName', 'email', 'password');
 checkEmail(checkSignUp, 'email');
 
+const checkSignUpAdmin = [];
+checkUserType(checkSignUpAdmin, 'type');
+checkIsAdmin(checkSignUpAdmin, 'isAdmin');
+
 
 const checkSignIn = [];
 checkEmpty(checkSignIn, 'email', 'password');
@@ -23,6 +28,7 @@ checkEmail(checkSignIn, 'email');
 const userValidations = {
   checkSignUp,
   checkSignIn,
+  checkSignUpAdmin,
 };
 
 export default userValidations;
