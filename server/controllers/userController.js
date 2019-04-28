@@ -7,13 +7,17 @@ const { response, responseErr } = ResponseMsg;
 class UserController {
   static async signup(req, res) {
     const {
-      firstName, lastName, email, password,
+      firstName, lastName, email, password, isAdmin, type,
     } = req.body;
     const hashedPassword = helper.hashPassword(password);
     try {
-      const user = await userModel.signup(firstName, lastName, email, hashedPassword);
-      const { id, type, isAdmin } = user;
-      const token = await helper.generateToken({ id, type, isAdmin });
+      const user = await userModel
+        .signup(firstName, lastName, email, hashedPassword, type, isAdmin);
+      const token = await helper.generateToken({
+        id: user.type,
+        type: user.type,
+        isAdmin: user.isAdmin,
+      });
       return response(res, 201, {
         token, id: user.id, firstName, lastName, email,
       });

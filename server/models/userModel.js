@@ -15,9 +15,9 @@ class User {
    * @returns { Object } the created user details
    * @memberof User
    */
-  static async signup(firstName, lastName, email, hashedPassword) {
+  static async signup(firstName, lastName, email, hashedPassword, type, isAdmin) {
     try {
-      const values = [email, firstName, lastName, hashedPassword];
+      const values = [email, firstName, lastName, hashedPassword, type || 'client', isAdmin || false];
       const { rows } = await db.query(insertUser, values);
       return helper.camelCased(rows[0]);
     } catch (error) {

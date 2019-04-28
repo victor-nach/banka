@@ -104,6 +104,28 @@ class ValidatorHelpers {
   }
 
   /**
+   * @static checkEither
+   * @description checks the user type field for either client or staff
+   * @param { String } route
+   * @param { String } field the input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkUserType(path, field) {
+    path.push(check(field).trim().matches(/\bclient|staff\b/).withMessage('the user account type has to be either client or staff'));
+  }
+
+  /**
+   * @static checkEither
+   * @description checks the user type field for either client or staff
+   * @param { String } route
+   * @param { String } field the input fields
+   * @memberof ValidatorHelpers
+   */
+  static checkIsAdmin(path, field) {
+    path.push(check(field).trim().isBoolean().withMessage(`the ${field} value has to be either true or false`));
+  }
+
+  /**
    * @static checkFloat
    * @description checks if the value is a valid floating point number
    * @param { Array } route
