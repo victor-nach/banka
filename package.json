@@ -11,7 +11,8 @@
     "coverage": "nyc report --reporter=text-lcov | coveralls ",
     "lint": "./node_modules/.bin/eslint ./server",
     "lint:fix": "./node_modules/.bin/eslint ./server --fix || true",
-    "migration:test": "export NODE_ENV=test && babel-node server/models/db/migration.js"
+    "migration:test": "export NODE_ENV=test && babel-node server/models/db/migration.js",
+    "migration:prod": "export NODE_ENV=production && babel-node server/models/db/migration.js"
   },
   "repository": {
     "type": "git",

@@ -7,7 +7,7 @@ const {
 // Validate credit account
 const checkcreditAccount = [];
 checkEmpty(checkcreditAccount, 'accountNumber', 'amount');
-checkNumber(checkcreditAccount, 'amount', 'accountNumber');
+checkNumber(checkcreditAccount, 'amount');
 checkMinLength(checkcreditAccount, 10, 'accountNumber');
 checkMaxLength(checkcreditAccount, 10, 'accountNumber');
 
@@ -28,7 +28,6 @@ checkMaxLength(checkGetAllTrans, 10, 'accountNumber');
 // Validate get all transactions
 const checkGetSingleTrans = [];
 checkEmpty(checkGetSingleTrans, 'transactionId');
-checkNumber(checkGetSingleTrans, 'transactionId');
 
 
 const transactionValidations = {

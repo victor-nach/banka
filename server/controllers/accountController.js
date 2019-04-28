@@ -18,9 +18,9 @@ class AccountController {
     const { userId } = req.user;
     try {
       const account = await AccountModel.createAccount(userId, type, openingBalanceF);
-      return response(res, 200, account);
+      response(res, 200, account);
     } catch (error) {
-      return responseErr(res, 500, 'server error');
+      // return responseErr(res, 500, 'server error');
     }
   }
 
@@ -112,14 +112,10 @@ class AccountController {
     }
     if (status === undefined) status = 'bank';
     try {
-      // console.log(status);
       const accounts = await AccountModel.allBankAccounts(status);
       return response(res, 200, accounts);
     } catch (error) {
-      // if (error.name === 'account_null') {
-      //   return responseShort(res, 200, `There are no ${status} accounts yet`);
-      // }
-      return responseErr(res, 500, 'Internal Server Error');
+      return responseShort(res, 200, `There are no ${status} accounts yet`);
     }
   }
 }

@@ -22,8 +22,7 @@ class Account {
     const { rows } = await db.query(getUserById, values);
     const { firstName, lastName, email } = helper.camelCased(rows[0]);
     const result = await db.query(getAllAccounts);
-    // get the value of the account number of the account in the array, then add 1
-    const accountNumber = Number(result.rows[result.rows.length - 1].account_number) + 1;
+    const accountNumber = helper.genAccNumber(result.rows);
     values = [accountNumber, userId, type, 'draft', openingBalance];
     await db.query(insertAccount, values);
     return {
@@ -148,11 +147,11 @@ class Account {
       const values = [type];
       result = await db.query(getAccountByStatus, values);
     }
-    // if (!result.rows[0]) {
-    //   const error = new Error();
-    //   error.name = 'account_null';
-    //   throw error;
-    // }
+    if (!result.rows[0]) {
+      const error = new Error();
+      error.name = 'account_null';
+      throw error;
+    }
     const accounts = result.rows.map(element => helper.camelCased(element));
     return accounts;
   }
