@@ -14,7 +14,7 @@ class UserController {
       const user = await userModel
         .signup(firstName, lastName, email, hashedPassword, type, isAdmin);
       const token = await helper.generateToken({
-        id: user.type,
+        id: user.id,
         type: user.type,
         isAdmin: user.isAdmin,
       });

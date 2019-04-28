@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import nodemailer from 'nodemailer';
 
 dotenv.config();
 
@@ -68,6 +69,25 @@ class Helpers {
       return 1234567801;
     }
     return Number(accountArray[accountArray.length - 1].account_number) + 1;
+  }
+
+  static async mailHandler(to, subject, html) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.SERVER_MAIL,
+        pass: process.env.SERVER_MAIL_PASS,
+      },
+    });
+
+    const mailOptions = {
+      from: process.env.SERVER_MAIL,
+      // to: 'viheanaco@gmail.com',
+      to,
+      subject,
+      html,
+    };
+    await transporter.sendMail(mailOptions);
   }
 }
 
