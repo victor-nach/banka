@@ -46,7 +46,6 @@ class TransactionController {
       if (error.name === 'account_dormant') {
         return responseErr(res, 400, 'Transaction failed, this account is dormant');
       }
-      console.log(error);
       return responseErr(res, 500, 'Internal server error');
     }
   }
