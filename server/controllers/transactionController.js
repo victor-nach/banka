@@ -1,5 +1,6 @@
 import TransactionModel from '../models/transactionModel';
 import ResponseMsg from '../utils/responseMsg';
+import Notifications from '../utils/notifications';
 
 const { response, responseErr, responseShort } = ResponseMsg;
 
@@ -18,9 +19,12 @@ class TransactionController {
     const { userId } = req.user;
     const transactionType = 'debit';
     try {
-      const transaction = await TransactionModel
+      const { transaction, user } = await TransactionModel
         .transactions(amount, accountNumber, userId, transactionType);
       const { newBalance, id } = transaction;
+
+      await Notifications.sendTransaction(transaction, user);
+
       return response(res, 200, {
         transactionId: id,
         accountNumber: Number(accountNumber),
@@ -42,6 +46,7 @@ class TransactionController {
       if (error.name === 'account_dormant') {
         return responseErr(res, 400, 'Transaction failed, this account is dormant');
       }
+      console.log(error);
       return responseErr(res, 500, 'Internal server error');
     }
   }
@@ -60,8 +65,11 @@ class TransactionController {
     const { userId } = req.user;
     const transactionType = 'credit';
     try {
-      const transaction = await TransactionModel
+      const { transaction, user } = await TransactionModel
         .transactions(Number(amount), accountNumber, userId, transactionType);
+
+      await Notifications.sendTransaction(transaction, user);
+
       const { newBalance, id } = transaction;
       return response(res, 200, {
         transactionId: id,

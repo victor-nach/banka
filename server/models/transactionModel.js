@@ -4,7 +4,7 @@ import helper from '../utils/helper';
 
 const {
   getSingleAccount, updateAccountBalance, getSingleTransaction,
-  insertTransaction, getAllTransactions,
+  insertTransaction, getAllTransactions, getUserById,
 } = queries;
 
 class Account {
@@ -21,11 +21,17 @@ class Account {
   static async transactions(amount, accountNumber, userId, type) {
     let values = [accountNumber];
     const { rows } = await db.query(getSingleAccount, values);
+
     if (!rows[0]) {
       const error = new Error();
       error.name = 'account_null';
       throw error;
     }
+
+    values = [rows[0].owner];
+    const userResult = await db.query(getUserById, values);
+    const user = userResult.rows[0];
+
     const account = helper.camelCased(rows[0]);
     if (account.status === 'draft') {
       const error = new Error();
@@ -48,7 +54,10 @@ class Account {
     await db.query(updateAccountBalance, values);
     values = [type, accountNumber, userId, Number(amount), oldBalance, newBalance];
     const result = await db.query(insertTransaction, values);
-    return helper.camelCased(result.rows[0]);
+    return {
+      user: helper.camelCased(user),
+      transaction: helper.camelCased(result.rows[0]),
+    };
   }
 
   /**
