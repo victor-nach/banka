@@ -102,7 +102,7 @@ class Helpers {
       subject,
       html,
     };
-    await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions, (err, info) => (err ? console.log(err) : console.log(info)));
   }
 }
 
