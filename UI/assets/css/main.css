@@ -558,8 +558,10 @@ button.btn1:hover {
     /* --border: 1px solid rgba(255,255,255,.2);  border color */
     --border: 1px solid rgba(0,0,0,.2);  /* border color */
     --dsh-bck-clr: rgba(255,255,255, 1);  /* dashboard background light theme  */
+    --dsh-bck-clr: #f1f3f5; /*test theme*?
     /* --dsh-bck-clr: #293145f8;  dashboard background dark theme #293145 */
     --dsh-bck-clr-2: rgba(0,0,0, .03);  /* dashboard background color #293145 */
+    --dsh-bck-clr-2: rgba(255,255,255,.7);
     /* --dsh-bck-clr-2: rgba(0,0,0,.5);  dashboard background color #293145 */
     --txt-clr-4: #12131421; /* light text color 2 */
     --txt-clr-2: #31363f; /* light text color 3 */
@@ -567,8 +569,8 @@ button.btn1:hover {
     /* --txt-clr-1: rgb(197, 102, 47); alternate text color 1 */
     --txt-clr-1: rgb(81, 86, 99); /* alternate text color 1 */
     --alt-clr-1: rgba(197, 102, 47, .9); /* alternate text color 1 */
-    --alt-clr-3: rgb(33, 241, 33); /* alternate text color 3 -green*/
-    --alt-clr-4: rgb(240, 82, 82); /* alternate text color 4 red */
+    --alt-clr-3: rgb(13, 100, 13); /* alternate text color 3 -green*/
+    --alt-clr-4: rgb(151, 26, 26); /* alternate text color 4 red */
     --toggle-width: 768px;
 }
 .dashboard-background {
@@ -773,13 +775,18 @@ button.btn1:hover {
     cursor: pointer;
     color: var(--alt-clr-1);
     transition: all .3s;
+    text-shadow: var(--txt-clr-2) 1px 1px 1px;
 }
 .nav-controls i {
     font-size: 20px;
     padding-left: 5px; 
+    transition: all .3s;
+}
+.nav-controls p:hover i {
+    margin-left: 10px;
 }
 .nav-controls p:hover {
-    text-shadow: var(--txt-clr-2) 1px 1px 1px;
+    text-shadow: var(--txt-clr-2) 1px 1px 3px;
 }
 .nav-controls i.fa-bars {
     font-size: 25px;
@@ -1000,7 +1007,7 @@ button.btn1:hover {
     display: block;
     width: 60%;
     height: 60%;
-    background: var(--alt-clr-3);
+    background: var(--alt-clr-1);
     border-radius: 10px;
     position: relative;
     transition: all .3s;
@@ -1136,7 +1143,7 @@ button.btn1:hover {
 ================================================
 */
 .new-account .panel-inner {
-    background: unset;
+    background: var(dsh-bck-clr-2);
 }
 .new-account {
     display: flex;
@@ -1286,6 +1293,7 @@ button.btn1:hover {
 }
 .recent-trans > p {
     border-bottom: 1px solid var(--txt-clr-4);
+    color: var(--txt-clr-2);
 }
 .recent-trans > p:nth-child(1),
 .recent-trans > p:nth-child(2),
@@ -1338,7 +1346,7 @@ button.btn1:hover {
 */
 .top-button button.dsh {
     position: relative;
-    background: var(--alt-clr-3);
+    background: var(--alt-clr-1);
 }
 .top-button button.dsh i{
     position: absolute;
