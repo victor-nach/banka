@@ -25,10 +25,21 @@ checkEmpty(checkSignIn, 'email', 'password');
 noWhiteSpace(checkSignIn, 'email', 'password');
 checkEmail(checkSignIn, 'email');
 
+const checkPasswordReset = [];
+checkEmpty(checkPasswordReset, 'email');
+noWhiteSpace(checkPasswordReset, 'email');
+checkEmail(checkPasswordReset, 'email');
+
+const checkNewPassword = [];
+checkEmpty(checkNewPassword, 'password');
+noWhiteSpace(checkNewPassword, 'password');
+
 const userValidations = {
   checkSignUp,
   checkSignIn,
   checkSignUpAdmin,
+  checkPasswordReset,
+  checkNewPassword,
 };
 
 export default userValidations;

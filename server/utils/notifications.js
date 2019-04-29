@@ -1,6 +1,13 @@
 import helper from './helper';
 
 class Notifications {
+  /**
+   * @static sendTransaction
+   * @param { Object } transaction
+   * @param { Object } user
+   * @description sends transaction notifications
+   * @memberof Notifications
+   */
   static sendTransaction(transaction, user) {
     const to = user.email;
     const subject = `BANKA Transaction Notification Services (BANKA ALERT): ${transaction.type}: `;
@@ -29,6 +36,31 @@ class Notifications {
                     <td style="border: 1px solid">${transaction.newBalance}</td> 
                   </tr>
                 </table>
+            </p>    
+    `;
+    helper.mailHandler(to, subject, html);
+  }
+
+  /**
+   * @static sendPassordReset
+   * @param { Object } link password reset link
+   * @param { Object } user
+   * @description sends password reset link
+   * @memberof Notifications
+   */
+  static sendResetLink(link, user) {
+    const to = user.email;
+    const subject = 'BANKA Notification Services (PASSWORD RESET)';
+    const html = `
+            <p>
+                Dear <em style="text-transform: capitalize">${user.firstName} ${user.lastName}</em>, <br>
+
+                you have requested for a password reset, kindly follow the one time link below to change your password <br>
+                ${link} <br>
+                
+                If you did not request for a password reset, please ignore this email or reply to let us know.
+
+                best regards, bankai.
             </p>    
     `;
     helper.mailHandler(to, subject, html);

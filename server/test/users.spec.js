@@ -430,3 +430,166 @@ describe('POST /auth/signup/admin', () => {
     });
   });
 });
+
+let response;
+describe('POST /auth/password-reset', () => {
+  describe('password reset', () => {
+    it('should respond 200 and send the reset email ', (done) => {
+      const user = {
+        email: 'viheanaco@gmail.com',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('data');
+          expect(res.body.data).to.be.a('object');
+          expect(res.body.data).to.have.property('token');
+          expect(res.body.data.token).to.be.a('string');
+          expect(res.body.data).to.have.property('id');
+          expect(res.body.data.id).to.be.a('number');
+          expect(res.body.data.id % 1).to.be.equal(0);
+          expect(res.body.data).to.have.property('message');
+          expect(res.body.data.message).to.include('has been successfully sent');
+          response = res.body.data;
+          done();
+        });
+    });
+
+    it('should respond 404 if email doesn\'t exist ', (done) => {
+      const user = {
+        email: 'viheanapp@gmail.com',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('email does not exist');
+          done();
+        });
+    });
+
+    it('should respond 4500 for a server error ', (done) => {
+      sinon.stub(userModel, 'resetPassword').throws();
+      const user = {
+        email: 'viheanaco@gmail.com',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(500);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('server error');
+          done();
+        });
+    });
+  });
+});
+
+describe('POST /auth/password-reset/:id/:token', () => {
+  describe('update new password after reset', () => {
+    it('should respond 200 and send the update the new user password ', (done) => {
+      const user = {
+        password: 'brocolli',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset/${response.id}/${response.token}`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(200);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(200);
+          expect(res.body).to.have.property('message');
+          expect(res.body.message).to.include('successfully upated');
+          done();
+        });
+    });
+
+    it('should respond 401 if token has already been used', (done) => {
+      const user = {
+        password: 'brocolli',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset/${response.id}/${response.token}`)
+        .send(user)
+        .end(() => {
+          chai
+            .request(app)
+            .post(`${endPoint}/password-reset/${response.id}/${response.token}`)
+            .send(user)
+            .end((err, res) => {
+              expect(res).to.have.status(401);
+              expect(res.body).to.be.a('object');
+              expect(res.body).to.have.property('status');
+              expect(res.body.status).to.be.equal(401);
+              expect(res.body).to.have.property('error');
+              expect(res.body.error).to.be.a('string');
+              expect(res.body.error).to.include('One time token you have provided is invalid');
+              done();
+            });
+        });
+    });
+
+    it('should respond 404 for an invalid user id', (done) => {
+      const user = {
+        password: 'brocolli',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset/60/${response.token}`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(404);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(404);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('invalid user id');
+          done();
+        });
+    });
+
+    it('should respond 500 for a server error ', (done) => {
+      sinon.stub(userModel, 'updatePassword').throws();
+      const user = {
+        password: 'brocolli',
+      };
+      chai
+        .request(app)
+        .post(`${endPoint}/password-reset/${response.id}/${response.token}`)
+        .send(user)
+        .end((err, res) => {
+          expect(res).to.have.status(500);
+          expect(res.body).to.be.a('object');
+          expect(res.body).to.have.property('status');
+          expect(res.body.status).to.be.equal(500);
+          expect(res.body).to.have.property('error');
+          expect(res.body.error).to.be.a('string');
+          expect(res.body.error).to.include('server error');
+          done();
+        });
+    });
+  });
+});

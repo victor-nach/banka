@@ -3,6 +3,7 @@ export default {
   insertUser: 'INSERT INTO users(email, first_name, last_name, hashed_password, type, is_admin) VALUES($1, $2, $3, $4, $5, $6) RETURNING *;',
   getSingleUser: 'SELECT * FROM users WHERE email = $1;',
   getUserById: 'SELECT * FROM users WHERE id = $1;',
+  updateUserPassword: 'UPDATE users SET hashed_password = $1 WHERE id = $2',
 
   // Accounts
   insertAccount: 'INSERT INTO accounts (account_number, owner, type, status, balance) VALUES($1, $2, $3, $4, $5) RETURNING *;',
