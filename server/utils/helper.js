@@ -22,8 +22,8 @@ class Helpers {
    * @param { Object } payload - { id, type, isAdmin }
    * @returns { String } token
    */
-  static generateToken(payload) {
-    return jwt.sign(payload, process.env.SECRET, { expiresIn: '2w' });
+  static generateToken(payload, secret) {
+    return jwt.sign(payload, secret || process.env.SECRET, { expiresIn: '2w' });
   }
 
   /**
@@ -44,8 +44,8 @@ class Helpers {
    * @returns { Object } payload - { id, type, isAdmin }
    * @memberof Helper
    */
-  static decodeToken(token) {
-    return jwt.verify(token, process.env.SECRET);
+  static decodeToken(token, secret) {
+    return jwt.verify(token, secret || process.env.SECRET);
   }
 
   /**
@@ -64,6 +64,13 @@ class Helpers {
     return newObject;
   }
 
+  /**
+   * @static
+   * @param { Array } accountArray
+   * @returns account number
+   * @description returns a new unique idntifier based on the state of the database
+   * @memberof Helpers
+   */
   static genAccNumber(accountArray) {
     if (!accountArray[0]) {
       return 1234567801;
@@ -71,6 +78,14 @@ class Helpers {
     return Number(accountArray[accountArray.length - 1].account_number) + 1;
   }
 
+  /**
+   * @static
+   * @param {*} to
+   * @param {*} subject
+   * @param {*} html
+   * @description nodemailers email connection handler
+   * @memberof Helpers
+   */
   static async mailHandler(to, subject, html) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',

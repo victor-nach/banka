@@ -535,7 +535,7 @@ describe('GET /user/<email-address>/accounts', () => {
     it('should return 200 if email address doesn\'t have any bank account', (done) => {
       chai
         .request(app)
-        .get(`${endPoint}user/johndoe@gmail.com/accounts`)
+        .get(`${endPoint}user/viheanaco@gmail.com/accounts`)
         .set('x-access-token', adminToken)
         .end((err, res) => {
           expect(res).to.have.status(200);

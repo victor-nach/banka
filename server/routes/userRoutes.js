@@ -10,7 +10,9 @@ const { verifyToken, verifyAdmin } = Auth;
 
 const router = express.Router();
 
-const { checkSignUp, checkSignIn, checkSignUpAdmin } = userValidations;
+const {
+  checkSignUp, checkSignIn, checkSignUpAdmin, checkNewPassword, checkPasswordReset,
+} = userValidations;
 const { checkAllUserAccounts } = accountValidations;
 
 router.post(
@@ -33,6 +35,18 @@ router.post(
   checkSignIn,
   validateResult,
   userController.signin,
+);
+router.post(
+  '/auth/password-reset',
+  checkPasswordReset,
+  validateResult,
+  userController.resetPassword,
+);
+router.post(
+  '/auth/password-reset/:id/:token',
+  checkNewPassword,
+  validateResult,
+  userController.newPassword,
 );
 router.get(
   '/user/:email/accounts',

@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === 'test') {
     INSERT INTO users ( email, first_name, last_name, hashed_password)
     VALUES ('mesutnyemaka@gmail.com', 'nyemaka', 'mesut', '${helper.hashPassword('wenger')}'),
            ('cecewilliams@gmail.com', 'cece', 'williams', '${helper.hashPassword('tennis')}'),
-           ('johndoe@gmail.com', 'john', 'doe', '${helper.hashPassword('jonjon')}');
+           ('viheanaco@gmail.com', 'john', 'doe', '${helper.hashPassword('jonjon')}');
         
     INSERT INTO accounts (account_number, owner, type, status, balance)
     VALUES (1234567801, 3, 'savings', 'draft', 123121.00),
